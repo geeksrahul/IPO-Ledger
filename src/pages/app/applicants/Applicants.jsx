@@ -8,6 +8,8 @@ import {
 import ApplicantDataCard from "./ApplicantDataCard";
 import ApplicantDataColumn from "./ApplicantDataColumn";
 import ApplicantDataRow from "./ApplicantDataRow";
+import ApplicantForm from "./ApplicantForm";
+import { useState } from "react";
 
 const applicantData = [
   {
@@ -15,15 +17,15 @@ const applicantData = [
     name: "Rahul Patel",
     email: "rahul.patel@example.com",
     contact: "+91 98765 43210",
-    pan: "ABCDE1234F",
-    dob: "15 Jun 1998",
+    pan_number: "ABCDE1234F",
+    dob: "15/06/2026",
   },
   {
     id: 2,
     name: "Priya Shah",
     email: "priya.shah@example.com",
     contact: "+91 98765 12345",
-    pan: "FGHIJ5678K",
+    pan_number: "FGHIJ5678K",
     dob: "22 Aug 1997",
   },
   {
@@ -31,7 +33,7 @@ const applicantData = [
     name: "Amit Mehta",
     email: "amit.mehta@example.com",
     contact: "+91 91234 56789",
-    pan: "LMNOP9012Q",
+    pan_number: "LMNOP9012Q",
     dob: "08 Mar 1995",
   },
   {
@@ -39,7 +41,7 @@ const applicantData = [
     name: "Neha Joshi",
     email: "neha.joshi@example.com",
     contact: "+91 99887 66554",
-    pan: "RSTUV3456W",
+    pan_number: "RSTUV3456W",
     dob: "19 Dec 2000",
   },
 ];
@@ -53,8 +55,25 @@ const tableColumns = [
 ];
 
 function Applicants() {
+  const [applicantForm, setApplicantForm] = useState({
+    mode:null,
+    data:{}
+  })
   return (
+
     <section className="space-y-6">
+      {applicantForm.mode && (
+        <ApplicantForm
+          mode={applicantForm.mode}
+          data={applicantForm.data}
+          onClose={()=>{
+            setApplicantForm({
+              mode:null,
+              data:{},
+            })
+          }}
+        />
+      )}
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-1">
@@ -72,8 +91,15 @@ function Applicants() {
         </div>
 
         <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-          <ContactRound className="h-4 w-4" />
-          <span>Applicant Directory</span>
+          <button
+            type="button"
+            className="bg-emerald-600 text-white px-5 py-2 rounded-md font-medium cursor-pointer"
+            onClick={()=>{
+              setApplicantForm({mode:"add", data:{}})
+            }}
+          >
+            Add Applicant
+          </button>
         </div>
       </div>
 
@@ -154,7 +180,10 @@ function Applicants() {
                 {applicantData.map((applicant) => (
                   <ApplicantDataRow
                     key={applicant.id}
-                    applicant={applicant}
+                    applicant={applicant} 
+                    onClick={()=>{
+                      setApplicantForm({mode:"update", data:applicant})
+                    }}
                   />
                 ))}
               </tbody>
