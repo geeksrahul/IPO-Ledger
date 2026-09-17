@@ -1,9 +1,236 @@
-import React from 'react'
+import {
+  CalendarDays,
+  ChevronDown,
+  CircleDollarSign,
+  Clock3,
+  Filter,
+  Layers3,
+  Search,
+  TrendingUp,
+} from "lucide-react";
+
+import IPODataCard from "./IPODataCard";
+import IPODataColumn from "./IPODataColumn";
+import IPODataRow from "./IPODataRow";
+import IPOSummaryCard from "./IPOSummaryCard";
+
+const summaryCards = [
+  {
+    label: "Total IPOs",
+    value: "24",
+    icon: Layers3,
+  },
+  {
+    label: "Open IPOs",
+    value: "04",
+    icon: TrendingUp,
+  },
+  {
+    label: "Upcoming",
+    value: "06",
+    icon: Clock3,
+  },
+  {
+    label: "Closed",
+    value: "14",
+    icon: CalendarDays,
+  },
+];
+
+const ipoData = [
+  {
+    id: 1,
+    company: "ABC Technologies",
+    symbol: "ABCT",
+    cutoffPrice: "₹125",
+    lotSize: 120,
+    openDate: "18 Sep 2026",
+    closeDate: "22 Sep 2026",
+    allotmentDate: "23 Sep 2026",
+    listingDate: "25 Sep 2026",
+    status: "Open",
+  },
+  {
+    id: 2,
+    company: "Nova Industries",
+    symbol: "NOVA",
+    cutoffPrice: "₹210",
+    lotSize: 70,
+    openDate: "24 Sep 2026",
+    closeDate: "28 Sep 2026",
+    allotmentDate: "29 Sep 2026",
+    listingDate: "01 Oct 2026",
+    status: "Upcoming",
+  },
+  {
+    id: 3,
+    company: "Vertex Healthcare",
+    symbol: "VERTEX",
+    cutoffPrice: "₹385",
+    lotSize: 38,
+    openDate: "10 Sep 2026",
+    closeDate: "14 Sep 2026",
+    allotmentDate: "15 Sep 2026",
+    listingDate: "17 Sep 2026",
+    status: "Listed",
+  },
+  {
+    id: 4,
+    company: "GreenGrid Energy",
+    symbol: "GREEN",
+    cutoffPrice: "₹160",
+    lotSize: 90,
+    openDate: "05 Sep 2026",
+    closeDate: "09 Sep 2026",
+    allotmentDate: "10 Sep 2026",
+    listingDate: "14 Sep 2026",
+    status: "Allotment",
+  },
+  {
+    id: 5,
+    company: "FinEdge Solutions",
+    symbol: "FINEDGE",
+    cutoffPrice: "₹275",
+    lotSize: 54,
+    openDate: "01 Sep 2026",
+    closeDate: "04 Sep 2026",
+    allotmentDate: "05 Sep 2026",
+    listingDate: "08 Sep 2026",
+    status: "Closed",
+  },
+];
+
+const tableColumns = [
+  "Company Name",
+  "Cutoff Price",
+  "Lot Size",
+  "Open Date",
+  "Close Date",
+  "Allotment",
+  "Listing",
+  "Status",
+];
 
 function IPOs() {
   return (
-    <div>IPOs</div>
-  )
+    <section className="space-y-6">
+      {/* Page Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-1">
+          <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+            IPO Management
+          </p>
+
+          <h1 className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
+            IPOs
+          </h1>
+
+          <p className="max-w-xl text-sm text-gray-500 dark:text-gray-400">
+            Explore and track initial public offering information in one
+            place.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+          <CircleDollarSign className="h-4 w-4" />
+          <span>IPO Overview</span>
+        </div>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+        {summaryCards.map((card) => (
+          <IPOSummaryCard key={card.label} card={card} />
+        ))}
+      </div>
+
+      {/* Search and Filters */}
+      <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          {/* Search */}
+          <div className="relative w-full lg:max-w-sm">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+
+            <input
+              type="search"
+              placeholder="Search IPOs..."
+              disabled
+              aria-label="Search IPOs"
+              className="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-3 text-sm text-gray-700 outline-none placeholder:text-gray-400 disabled:cursor-not-allowed dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:placeholder:text-gray-500"
+            />
+          </div>
+
+          {/* Filters */}
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              disabled
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-gray-200 px-3 text-sm font-medium text-gray-500 transition-colors disabled:cursor-not-allowed dark:border-gray-700 dark:text-gray-400"
+            >
+              <Filter className="h-4 w-4" />
+              Filters
+              <ChevronDown className="h-4 w-4" />
+            </button>
+
+            <button
+              type="button"
+              disabled
+              className="inline-flex h-10 items-center justify-center rounded-lg border border-gray-200 px-3 text-sm font-medium text-gray-500 transition-colors disabled:cursor-not-allowed dark:border-gray-700 dark:text-gray-400"
+            >
+              All Statuses
+              <ChevronDown className="ml-2 h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* IPO Data Section */}
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+        {/* Section Header */}
+        <div className="flex flex-col gap-1 border-b border-gray-200 px-4 py-4 sm:px-6 dark:border-gray-800">
+          <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+            IPO Listings
+          </h2>
+
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Overview of available and previously listed IPOs.
+          </p>
+        </div>
+
+        {/* Mobile and Tablet Cards */}
+        <div className="grid gap-3 p-4 lg:hidden">
+          {ipoData.map((ipo) => (
+            <IPODataCard key={ipo.id} ipo={ipo} />
+          ))}
+        </div>
+
+        {/* Desktop Table */}
+        <div className="hidden overflow-x-auto lg:block">
+          <table className="w-full min-w-275 text-left text-sm">
+            <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500 dark:bg-gray-800/60 dark:text-gray-400">
+              <tr>
+                {tableColumns.map((column) => (
+                  <IPODataColumn key={column} column={column} />
+                ))}
+              </tr>
+            </thead>
+
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+              {ipoData.map((ipo) => (
+                <IPODataRow key={ipo.id} ipo={ipo} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Footer */}
+        <div className="flex flex-col gap-2 border-t border-gray-200 px-4 py-3 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-gray-800 dark:text-gray-400">
+          <p>Showing {ipoData.length} IPOs</p>
+          <p>Search and filtering will be added later.</p>
+        </div>
+      </div>
+    </section>
+  );
 }
 
-export default IPOs
+export default IPOs;
