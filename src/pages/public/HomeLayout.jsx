@@ -5,7 +5,7 @@ import Features from "./Features";
 import Contact from "./Contact";
 import Footer from "./Footer";
 
-function Home() {
+function HomeLayout() {
   return (
     <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-white">
 
@@ -24,4 +24,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default HomeLayout;

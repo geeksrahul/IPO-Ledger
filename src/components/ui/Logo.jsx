@@ -1,9 +1,10 @@
+import { Link } from "react-router-dom";
 import logoImage from "../../assets/brand/logo1.png"
 
 function Logo() {
   return (
-    <a
-      href="/"
+    <Link
+      to="/"
       className="flex items-center w-48"
     >
       <img
@@ -11,7 +12,7 @@ function Logo() {
         alt="IPO Ledger"
         className="w-full h-auto object-contain"
       />
-    </a>
+    </Link>
   );
 }
 

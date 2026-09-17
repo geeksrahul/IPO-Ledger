@@ -1,3 +1,3 @@
-import Home from "./Home";
+import HomeLayout from "./HomeLayout";
 
-export {Home}
+export {HomeLayout}

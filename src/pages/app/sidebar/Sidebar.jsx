@@ -8,12 +8,13 @@ import {
   Settings,
   UsersRound,
 } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 const mainNavigation = [
   {
     label: "Dashboard",
     icon: LayoutDashboard,
-    href: "/app/dashboard",
+    href: "/app",
   },
   {
     label: "IPOs",
@@ -61,15 +62,15 @@ function Sidebar() {
           const Icon = item.icon;
 
           return (
-            <a
+            <NavLink
               key={item.label}
-              href={item.href}
+              to={item.href}
               className="flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-emerald-50 hover:text-emerald-600 dark:text-gray-400 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-400"
             >
               <Icon size={17} />
 
               <span>{item.label}</span>
-            </a>
+            </NavLink>
           );
         })}
 
@@ -77,15 +78,15 @@ function Sidebar() {
           const Icon = item.icon;
 
           return (
-            <a
+            <NavLink
               key={item.label}
-              href={item.href}
+              to={item.href}
               className="flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-emerald-50 hover:text-emerald-600 dark:text-gray-400 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-400"
             >
               <Icon size={17} />
 
               <span>{item.label}</span>
-            </a>
+            </NavLink>
           );
         })}
 
@@ -101,9 +102,9 @@ function Sidebar() {
             const Icon = item.icon;
 
             return (
-              <a
+              <NavLink
                 key={item.label}
-                href={item.href}
+                to={item.href}
                 title={item.label}
                 className="group flex items-center justify-center gap-3 rounded-xl px-3 py-3 text-gray-600 transition hover:bg-emerald-50 hover:text-emerald-600 dark:text-gray-400 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-400 xl:justify-start"
               >
@@ -114,7 +115,7 @@ function Sidebar() {
                 <span className="hidden truncate text-sm font-medium xl:block">
                   {item.label}
                 </span>
-              </a>
+              </NavLink>
             );
           })}
 
@@ -127,9 +128,9 @@ function Sidebar() {
             const Icon = item.icon;
 
             return (
-              <a
+              <NavLink
                 key={item.label}
-                href={item.href}
+                to={item.href}
                 title={item.label}
                 className="group flex items-center justify-center gap-3 rounded-xl px-3 py-3 text-gray-600 transition hover:bg-emerald-50 hover:text-emerald-600 dark:text-gray-400 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-400 xl:justify-start"
               >
@@ -138,7 +139,7 @@ function Sidebar() {
                 <span className="hidden text-sm font-medium xl:block">
                   {item.label}
                 </span>
-              </a>
+              </NavLink>
             );
           })}
 

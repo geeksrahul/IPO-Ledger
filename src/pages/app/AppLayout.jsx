@@ -1,5 +1,5 @@
-import React from 'react'
 import {Header, Sidebar} from "./"
+import { Outlet } from 'react-router-dom'
 
 function AppLayout() {
   return (
@@ -17,7 +17,7 @@ function AppLayout() {
 
       {/* Main Content */}
       <main className="order-3 min-w-0 px-4 py-5 sm:px-6 lg:col-start-2 lg:row-start-2 lg:px-8 lg:py-6">
-        {/* <Outlet /> */}
+        <Outlet />
       </main>
 
     </div>

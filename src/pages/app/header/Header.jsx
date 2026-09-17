@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 
 import {Logo} from "../../../components/ui";
+import { Link } from "react-router-dom";
 
 function Header() {
   return (
@@ -32,13 +33,13 @@ function Header() {
           </button>
 
           {/* Profile */}
-          <button
-            type="button"
+          <Link
+            to="/app/profile"
             aria-label="Open profile menu"
             className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 transition hover:bg-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-400 dark:hover:bg-emerald-950"
           >
             <UserRound size={19} />
-          </button>
+          </Link>
 
         </div>
 

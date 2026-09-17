@@ -4,7 +4,7 @@ import {
   ShieldCheck,
   TrendingUp,
 } from "lucide-react";
-
+import { Link } from "react-router-dom";
 function Hero() {
   return (
     <section className="overflow-hidden bg-white dark:bg-gray-950">
@@ -34,13 +34,13 @@ function Hero() {
           {/* Hero CTA */}
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
 
-            <a
-              href="/register"
+            <Link
+              to="/register"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-emerald-700"
             >
               Start Tracking
               <ArrowRight size={18} />
-            </a>
+            </Link>
 
             <a
               href="#features"
