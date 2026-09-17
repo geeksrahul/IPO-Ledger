@@ -1,1 +1,10 @@
+/* tailwind css */
 @import "tailwindcss";
+
+/* for dark/light mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* smooth scrolling in landing page */
+* {
+    scroll-behavior: smooth;
+}
