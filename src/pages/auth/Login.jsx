@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowRight,
   Eye,
@@ -8,12 +8,33 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import { authService } from "../../supabase";
+import {login } from "../../feature/auth/authSlice.js";
 
 function Login() {
   const {register, handleSubmit} = useForm();
   const [showPassword, setShowPassword] = useState(false);
-  const handleLoginFormSubmit = ({email, password}) => {
-    // login
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isLoggedIn = useSelector(state => state.auth.loginStatus);
+  // Redirecting already logged in users
+  useEffect(()=>{
+    if(isLoggedIn) {
+      navigate("/app");
+    }
+  }, [isLoggedIn, navigate]);
+  // handle form submit
+  const handleLoginFormSubmit =async ({email, password}) => {
+    const response = await authService.login({email, password});
+    if(response.success) {
+      dispatch(login(response.data.user));
+      navigate("/app");
+    } else {
+      console.log(response.error);
+    }
   }
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-950">

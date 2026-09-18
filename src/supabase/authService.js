@@ -41,6 +41,15 @@ class AuthService extends SupabaseService {
             };
         }
     }
+    // 
+    async getSession() {
+        const { data, error } =
+            await this.supabase.auth.getSession();
+        return {
+            session: data?.session ?? null,
+            error,
+        };
+    }
 }
 
 export const authService = new AuthService();
