@@ -2,7 +2,7 @@ import { createBrowserRouter, createRoutesFromElements, Route, Routes } from "re
 
 import { HomeLayout } from "../pages/public";
 import {AppLayout, Applicants, Applications, Banks, Dashboard, Demats, IPOs, Settings, Profile} from "../pages/app";
-import {Login, Register} from "../pages/auth"
+import {Login, Register, Logout} from "../pages/auth"
 import ProtectedRoute from "./ProtectedRoute";
  
 const router = createBrowserRouter(
@@ -11,6 +11,7 @@ const router = createBrowserRouter(
             <Route index element={<HomeLayout />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
+            <Route path="logout" element={<Logout />} />
             <Route element={<ProtectedRoute />} > 
                 <Route path="app" element={<AppLayout />}>
                     <Route index element={<Dashboard />} />

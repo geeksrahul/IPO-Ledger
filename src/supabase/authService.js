@@ -41,7 +41,7 @@ class AuthService extends SupabaseService {
             };
         }
     }
-    // 
+    // get current session
     async getSession() {
         const { data, error } =
             await this.supabase.auth.getSession();
@@ -49,6 +49,15 @@ class AuthService extends SupabaseService {
             session: data?.session ?? null,
             error,
         };
+    }
+    // signOut user 
+    async logout() {
+        const { error } = await this.supabase.auth.signOut();
+        if(!error) {
+            return {success:true, error}
+        } else {
+            return {success:false, error}
+        }
     }
 }
 
