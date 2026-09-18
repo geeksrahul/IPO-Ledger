@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowRight,
   Check,
@@ -9,12 +9,41 @@ import {
   ShieldCheck,
   UserRound,
 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
+import { authService } from "../../supabase";
+import {login } from "../../feature/auth/authSlice.js";
 
 function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const {register, handleSubmit} = useForm();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isLoggedIn = useSelector(state => state.auth.loginStatus);
+  // redirecting logged in user
+  useEffect(()=>{
+    if(isLoggedIn) {
+      navigate("/app");
+    }
+  }, [isLoggedIn, navigate]);
+  // form handling
+  const handleRegisterFormSubmit = async ({email, password, confirmPassword}) => {
+    if(password !== confirmPassword) {
+      console.log("password didn't match");
+      return;
+    }
+    const response = await authService.register({email, password});
+    if(response.success) {
+      dispatch(login(response.data.user));
+      navigate("/app");
+    } else {
+      console.log(response.error);
+    }
+  }
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-950">
 
@@ -43,44 +72,7 @@ function Register() {
           {/* Register Card */}
           <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8 dark:border-gray-800 dark:bg-gray-900">
 
-            <form className="space-y-5">
-
-              {/* Full Name */}
-              <div>
-                <label
-                  htmlFor="fullName"
-                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
-                >
-                  Full Name
-                </label>
-
-                <div className="relative mt-2">
-
-                  <UserRound
-                    size={18}
-                    className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                  />
-
-                  <input
-                    id="fullName"
-                    name="fullName"
-                    type="text"
-                    placeholder="Enter your full name"
-                    autoComplete="name"
-                    className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-10 pr-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
-                  />
-
-                </div>
-
-                {/* Static Validation Error Example */}
-                {/*
-                <p className="mt-2 text-xs font-medium text-red-600 dark:text-red-400">
-                  Full name is required.
-                </p>
-                */}
-
-              </div>
-
+            <form className="space-y-5" onSubmit={handleSubmit(handleRegisterFormSubmit)}>
               {/* Email */}
               <div>
                 <label
@@ -104,6 +96,12 @@ function Register() {
                     placeholder="you@example.com"
                     autoComplete="email"
                     className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-10 pr-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+                    {...register("email", {
+                      required: {
+                        value: true,
+                        message : "Field cannot remain empty",
+                      }
+                    })}
                   />
 
                 </div>
@@ -140,6 +138,12 @@ function Register() {
                     placeholder="Create a password"
                     autoComplete="new-password"
                     className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-10 pr-12 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+                     {...register("password", {
+                      required: {
+                        value: true,
+                        message : "Field cannot remain empty",
+                      }
+                    })}
                   />
 
                   <button
@@ -204,6 +208,12 @@ function Register() {
                     placeholder="Confirm your password"
                     autoComplete="new-password"
                     className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-10 pr-12 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+                     {...register("confirmPassword", {
+                      required: {
+                        value: true,
+                        message : "Field cannot remain empty",
+                      }
+                    })}
                   />
 
                   <button
@@ -222,11 +232,9 @@ function Register() {
                 </div>
 
                 {/* Static Validation Error Example */}
-                {/*
-                <p className="mt-2 text-xs font-medium text-red-600 dark:text-red-400">
-                  Passwords do not match.
-                </p>
-                */}
+                {/* (<p className="mt-2 text-xs font-medium text-red-600 dark:text-red-400">
+                    Passwords do not match.
+                  </p>) */}
 
               </div>
 
