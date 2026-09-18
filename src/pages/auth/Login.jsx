@@ -7,10 +7,14 @@ import {
   Mail,
   ShieldCheck,
 } from "lucide-react";
+import { useForm } from "react-hook-form";
 
 function Login() {
+  const {register, handleSubmit} = useForm();
   const [showPassword, setShowPassword] = useState(false);
-
+  const handleLoginFormSubmit = ({email, password}) => {
+    // login
+  }
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-950">
 
@@ -39,7 +43,7 @@ function Login() {
           {/* Login Card */}
           <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8 dark:border-gray-800 dark:bg-gray-900">
 
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={handleSubmit(handleLoginFormSubmit)}>
 
               {/* Email */}
               <div>
@@ -64,6 +68,12 @@ function Login() {
                     placeholder="you@example.com"
                     autoComplete="email"
                     className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-10 pr-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+                    {...register("email", {
+                      required : {
+                        value: true,
+                        message: "Field cannot remain empty"
+                      }
+                    })}
                   />
 
                 </div>
@@ -111,6 +121,12 @@ function Login() {
                     placeholder="Enter your password"
                     autoComplete="current-password"
                     className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-10 pr-12 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+                    {...register("password", {
+                      required: {
+                        value:true,
+                        message: "Field cannot remain empty"
+                      } 
+                    })}
                   />
 
                   <button
