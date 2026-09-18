@@ -1,3 +1,4 @@
 import { authService } from "./authService";
+import { dbService } from "./dbService";
 
-export {authService}
+export {authService, dbService}
