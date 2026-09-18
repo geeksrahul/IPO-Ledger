@@ -1,7 +1,33 @@
 import { X, UserRound } from "lucide-react";
+import { dbService } from "../../../supabase";
+import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 
 const ApplicantForm = ({ onClose, mode, data }) => {
+    const {register, handleSubmit} = useForm();
+    const isUpdateMode = mode === "update";
+    const user_id = useSelector(state => state.auth.userData.id);
     const {name, contact, email, pan_number, dob} = data;
+    const handleApplicantFormSubmit = async (formData) => {
+        const {name, contact, email, pan_number, dob} = formData;
+        if(isUpdateMode) {
+            const response = await dbService.updateApplicant(data.id, {name, contact, email, pan_number, dob, user_id});
+            if(response.success) {
+                console.log("applicant updated successfully");
+                onClose();
+            } else {
+                console.log("can't update applicant", response.error);
+            }
+        } else {
+            const response = await dbService.createApplicant({name, contact, email, pan_number, dob, user_id});
+            if(response.success) {
+                console.log("applicant added successfully");
+                onClose();
+            } else {
+                console.log("can't add applicant", response.error);
+            }
+        }
+    }
     return (
         <div className="h-screen fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-sm">
             {/* Form Container */}
@@ -38,6 +64,7 @@ const ApplicantForm = ({ onClose, mode, data }) => {
                 {/* Form */}
                 <form
                     className="space-y-5 p-6"
+                    onSubmit={handleSubmit(handleApplicantFormSubmit)}
                 >
                     {/* Name */}
                     <div className="space-y-2">
@@ -55,6 +82,12 @@ const ApplicantForm = ({ onClose, mode, data }) => {
                             placeholder="Enter full name"
                             defaultValue={name}
                             className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
+                            {...register("name",{
+                                required: {
+                                    value: true,
+                                    message: "field cannot remain empty"
+                                }
+                            })}
                         />
                     </div>
 
@@ -74,6 +107,12 @@ const ApplicantForm = ({ onClose, mode, data }) => {
                             placeholder="Enter contact number"
                             defaultValue={contact}
                             className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
+                            {...register("contact",{
+                                required: {
+                                    value: true,
+                                    message: "field cannot remain empty"
+                                }
+                            })}
                         />
                     </div>
 
@@ -93,6 +132,12 @@ const ApplicantForm = ({ onClose, mode, data }) => {
                             placeholder="Enter email address"
                             defaultValue={email}
                             className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
+                            {...register("email",{
+                                required: {
+                                    value: true,
+                                    message: "field cannot remain empty"
+                                }
+                            })}
                         />
                     </div>
 
@@ -111,6 +156,12 @@ const ApplicantForm = ({ onClose, mode, data }) => {
                             type="date"
                             defaultValue={dob}
                             className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                            {...register("dob",{
+                                required: {
+                                    value: true,
+                                    message: "field cannot remain empty"
+                                }
+                            })}
                         />
                     </div>
 
@@ -131,6 +182,12 @@ const ApplicantForm = ({ onClose, mode, data }) => {
                             maxLength={10}
                             defaultValue={pan_number}
                             className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm uppercase tracking-wider text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
+                            {...register("pan_number",{
+                                required: {
+                                    value: true,
+                                    message: "field cannot remain empty"
+                                }
+                            })}
                         />
                     </div>
 

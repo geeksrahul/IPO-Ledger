@@ -13,17 +13,17 @@ class DbService extends SupabaseService {
     }
     async createApplicant(applicant) {
         return executeService(() => {
-            return this.client.from("applicants").insert(applicant).select().single();
+            return this.supabase.from("applicants").insert(applicant).select().single();
         })
     }
     async deleteApplicant(id) {
         return executeService(() => {
-            return this.client.from("applicants").delete().eq("id", id);
+            return this.supabase.from("applicants").delete().eq("id", id);
         })
     }
     async updateApplicant(id, applicant) {
         return executeService(() => {
-            return this.client.from("applicants").update(applicant).eq("id", id).select().single();
+            return this.supabase.from("applicants").update(applicant).eq("id", id).select().single();
         })
     }
 }
