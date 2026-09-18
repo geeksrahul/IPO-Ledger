@@ -1,6 +1,6 @@
 import { CalendarDays, Mail, Phone, ShieldCheck } from "lucide-react";
 
-const ApplicantDataCard = ({ applicant }) => {
+const ApplicantDataCard = ({ applicant, onEdit }) => {
     const { name, email, contact, pan, dob } = applicant;
 
     return (

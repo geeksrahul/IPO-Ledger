@@ -7,8 +7,14 @@ import {
 import DematDataColumn from "./DematDataColumn";
 import DematDataRow from "./DematDataRow";
 import DematDataCard from "./DematDataCard";
+import { useState } from "react";
+import DematAccountForm from "./DematAccountForm";
 
 const Demats = () => {
+    const [dematAccountForm, setDematAccountForm] = useState({
+        mode: null,
+        data: {},
+    })
     const dematData = [
         {
             applicant_id: 1,
@@ -42,10 +48,21 @@ const Demats = () => {
         "Broker",
         "Login PIN",
         "TPIN",
+        "Actions"
     ];
 
     return (
         <main className="space-y-8">
+            {dematAccountForm.mode && <DematAccountForm
+                mode={dematAccountForm.mode}
+                data={dematAccountForm.data}
+                onClose={() => {
+                    setDematAccountForm({
+                        mode: null,
+                        data: {},
+                    })
+                }}
+            />}
             {/* Page Header */}
             <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
                 <div>
@@ -62,10 +79,14 @@ const Demats = () => {
                     </p>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-                    <WalletCards className="h-4 w-4" />
-                    Demat Directory
-                </div>
+                <button className="px-5 py-2 bg-emerald-700 text-white rounded-md cursor-pointer" onClick={() => {
+                    setDematAccountForm({
+                        mode: "add",
+                        data: {},
+                    })
+                }}>
+                    Add Demat Account
+                </button>
             </section>
 
             {/* Summary Card */}
@@ -128,6 +149,12 @@ const Demats = () => {
                         <DematDataCard
                             key={demat.applicant_id}
                             demat={demat}
+                            onEdit={() => {
+                                setDematAccountForm({
+                                    data: demat,
+                                    mode: "update"
+                                })
+                            }}
                         />
                     ))}
                 </div>
@@ -143,6 +170,12 @@ const Demats = () => {
                                     <DematDataRow
                                         key={demat.applicant_id}
                                         demat={demat}
+                                        onEdit={() => {
+                                            setDematAccountForm({
+                                                data: demat,
+                                                mode: "update"
+                                            })
+                                        }}
                                     />
                                 ))}
                             </tbody>

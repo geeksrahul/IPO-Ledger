@@ -52,6 +52,7 @@ const tableColumns = [
   "Contact",
   "PAN Number",
   "Date of Birth",
+  "Actions"
 ];
 
 function Applicants() {
@@ -167,6 +168,12 @@ function Applicants() {
             <ApplicantDataCard
               key={applicant.id}
               applicant={applicant}
+              onEdit={()=>{
+                setApplicantForm({
+                  mode:"update",
+                  data:applicant,
+                })
+              }}
             />
           ))}
         </div>
@@ -181,8 +188,11 @@ function Applicants() {
                   <ApplicantDataRow
                     key={applicant.id}
                     applicant={applicant} 
-                    onClick={()=>{
-                      setApplicantForm({mode:"update", data:applicant})
+                    onEdit={()=>{
+                      setApplicantForm({
+                        mode:"update",
+                        data:applicant,
+                      })
                     }}
                   />
                 ))}

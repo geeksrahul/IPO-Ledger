@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
     Building2,
     Filter,
@@ -7,8 +9,14 @@ import {
 import BankDataColumn from "./BankDataColumn";
 import BankDataRow from "./BankDataRow";
 import BankDataCard from "./BankDataCard";
+import BankAccountForm from "./BankAccountForm";
+
 
 const Banks = () => {
+    const [bankForm, setBankForm] = useState({
+        mode: null,
+        data: {},
+    })
     const bankData = [
         {
             applicant_id: 1,
@@ -42,10 +50,21 @@ const Banks = () => {
         "Account Number",
         "Bank Name",
         "IFSC Code",
+        "Actions"
     ];
 
     return (
         <main className="space-y-8">
+            {bankForm.mode && <BankAccountForm
+                mode={bankForm.mode}
+                data={bankForm.data}
+                onClose={() => {
+                    setBankForm({
+                        mode: null,
+                        data: {},
+                    })
+                }}
+            />}
             {/* Page Header */}
             <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
                 <div>
@@ -62,10 +81,14 @@ const Banks = () => {
                     </p>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-                    <Building2 className="h-4 w-4" />
-                    Bank Directory
-                </div>
+                <button className="px-5 py-2 bg-emerald-700 text-white rounded-md cursor-pointer" onClick={() => {
+                    setBankForm({
+                        mode: "add",
+                        data: {},
+                    })
+                }}>
+                    Add Bank Account
+                </button>
             </section>
 
             {/* Summary Card */}
@@ -128,6 +151,12 @@ const Banks = () => {
                         <BankDataCard
                             key={bank.applicant_id}
                             bank={bank}
+                            onClick={() => {
+                                setBankForm({
+                                    mode: "update",
+                                    data: bank,
+                                })
+                            }}
                         />
                     ))}
                 </div>
@@ -143,6 +172,12 @@ const Banks = () => {
                                     <BankDataRow
                                         key={bank.applicant_id}
                                         bank={bank}
+                                        onClick={() => {
+                                            setBankForm({
+                                                mode: "update",
+                                                data: bank,
+                                            })
+                                        }}
                                     />
                                 ))}
                             </tbody>
