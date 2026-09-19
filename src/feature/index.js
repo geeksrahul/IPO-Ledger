@@ -1,3 +1,4 @@
+import { applicantsReducer } from "./applicants/applicantsSlice";
 import { authReducer } from "./auth/authSlice";
-
-export {authReducer}
+applicantsReducer
+export {authReducer, applicantsReducer}

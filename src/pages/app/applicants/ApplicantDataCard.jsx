@@ -1,7 +1,7 @@
 import { CalendarDays, Mail, Phone, ShieldCheck } from "lucide-react";
 
 const ApplicantDataCard = ({ applicant, onEdit }) => {
-    const { name, email, contact, pan, dob } = applicant;
+    const { name, email, contact, pan_number, dob } = applicant;
 
     return (
         <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-900">
@@ -44,7 +44,7 @@ const ApplicantDataCard = ({ applicant, onEdit }) => {
                     <ShieldCheck className="h-4 w-4 shrink-0 text-slate-400" />
 
                     <span className="font-medium tracking-wide text-slate-700 dark:text-slate-300">
-                        {pan}
+                        {pan_number.toUpperCase()}
                     </span>
                 </div>
 

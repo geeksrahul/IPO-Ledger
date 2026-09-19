@@ -8,7 +8,7 @@ class DbService extends SupabaseService {
     // CRUD: Applicant
     async getApplicants() {
         return executeService(()=> {
-           return this.supabase.client.from("applicants").select("*");
+           return this.supabase.from("applicants").select("*");
         });
     }
     async createApplicant(applicant) {

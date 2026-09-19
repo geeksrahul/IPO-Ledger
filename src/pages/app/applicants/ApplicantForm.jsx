@@ -1,18 +1,27 @@
 import { X, UserRound } from "lucide-react";
 import { dbService } from "../../../supabase";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addApplicant, updateApplicant } from "../../../feature/applicants/applicantsSlice";
 
 const ApplicantForm = ({ onClose, mode, data }) => {
     const {register, handleSubmit} = useForm();
     const isUpdateMode = mode === "update";
     const user_id = useSelector(state => state.auth.userData.id);
     const {name, contact, email, pan_number, dob} = data;
+    const dispatch = useDispatch();
     const handleApplicantFormSubmit = async (formData) => {
         const {name, contact, email, pan_number, dob} = formData;
         if(isUpdateMode) {
             const response = await dbService.updateApplicant(data.id, {name, contact, email, pan_number, dob, user_id});
             if(response.success) {
+                console.log(data.id);
+                dispatch(updateApplicant({
+                    id: data.id,
+                    data : {
+                        name, contact, email, pan_number, dob
+                    }
+                }));
                 console.log("applicant updated successfully");
                 onClose();
             } else {
@@ -21,6 +30,7 @@ const ApplicantForm = ({ onClose, mode, data }) => {
         } else {
             const response = await dbService.createApplicant({name, contact, email, pan_number, dob, user_id});
             if(response.success) {
+                dispatch(addApplicant(response.data));
                 console.log("applicant added successfully");
                 onClose();
             } else {

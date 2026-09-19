@@ -10,41 +10,7 @@ import ApplicantDataColumn from "./ApplicantDataColumn";
 import ApplicantDataRow from "./ApplicantDataRow";
 import ApplicantForm from "./ApplicantForm";
 import { useState } from "react";
-
-const applicantData = [
-  {
-    id: 1,
-    name: "Rahul Patel",
-    email: "rahul.patel@example.com",
-    contact: "+91 98765 43210",
-    pan_number: "ABCDE1234F",
-    dob: "15/06/2026",
-  },
-  {
-    id: 2,
-    name: "Priya Shah",
-    email: "priya.shah@example.com",
-    contact: "+91 98765 12345",
-    pan_number: "FGHIJ5678K",
-    dob: "22 Aug 1997",
-  },
-  {
-    id: 3,
-    name: "Amit Mehta",
-    email: "amit.mehta@example.com",
-    contact: "+91 91234 56789",
-    pan_number: "LMNOP9012Q",
-    dob: "08 Mar 1995",
-  },
-  {
-    id: 4,
-    name: "Neha Joshi",
-    email: "neha.joshi@example.com",
-    contact: "+91 99887 66554",
-    pan_number: "RSTUV3456W",
-    dob: "19 Dec 2000",
-  },
-];
+import { useSelector } from "react-redux";
 
 const tableColumns = [
   "Name",
@@ -60,6 +26,7 @@ function Applicants() {
     mode:null,
     data:{}
   })
+  const applicantData = useSelector(state => state.applicants.data);
   return (
 
     <section className="space-y-6">
