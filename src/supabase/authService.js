@@ -1,8 +1,8 @@
-import SupabaseService from "./supabaseService";
+import supabase from "./supabaseService";
 
-class AuthService extends SupabaseService {
-    constructor() {
-        super();
+class AuthService {
+    constructor(supabase) {
+        this.supabase = supabase;
     }
     // signIn or login
     async login({email, password}) {
@@ -61,4 +61,4 @@ class AuthService extends SupabaseService {
     }
 }
 
-export const authService = new AuthService();
+export const authService = new AuthService(supabase);

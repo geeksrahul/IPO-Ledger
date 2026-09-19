@@ -1,8 +1,44 @@
 import { Building2, X } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { dbService } from "../../../supabase";
+import { addBankAccount, updateBankAccount } from "../../../feature/accounts/bankSlice";
+import { updateApplicant } from "../../../feature/applicants/applicantsSlice";
 
-const BankAccountForm = ({ mode, data, onClose}) => {
+const BankAccountForm = ({ mode, data, onClose }) => {
     const isUpdateMode = mode === "update";
-
+    const { register, handleSubmit } = useForm();
+    const user_id = useSelector(state => state.auth.userData.id)
+    const applicants = useSelector(state => state.applicants.data);
+    const dispatch = useDispatch();
+    const hanldeBankAccountForm = async (formData) => {
+        if(isUpdateMode) {
+            const response = await dbService.updateBankAccount(
+                data.id,
+                {
+                    ...formData, user_id
+                } 
+            );
+            if(response.success) {
+                dispatch(updateBankAccount({
+                    id: data.id,
+                    data : {...formData, user_id}
+                }));
+                console.log("bank account updated");
+            } else {
+                console.log("can't update data");
+            }
+        } else {
+            const response = await dbService.createBankAccount({...formData, user_id });
+            if(response.success) {
+                dispatch(addBankAccount(formData));
+                console.log("bank account added successfully");
+            } else {
+                console.log("unable to add bank account ", response.error);
+            }
+        }
+        onClose();
+    }
     return (
         <div className="min-h-screen fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-sm">
             <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-900">
@@ -39,44 +75,41 @@ const BankAccountForm = ({ mode, data, onClose}) => {
                 </div>
 
                 {/* Form */}
-                <form className="space-y-5 p-6">
+                <form className="space-y-5 p-6" onSubmit={handleSubmit(hanldeBankAccountForm)}>
                     {/* Applicant Name */}
                     <div className="space-y-2">
                         <label
                             htmlFor="applicant-name"
                             className="text-sm font-medium text-slate-700 dark:text-slate-300"
                         >
-                            Applicant Name
+                            Select Applicant
                         </label>
 
-                        <input
+                        <select
                             id="applicant-name"
-                            name="applicant_name"
-                            type="text"
-                            defaultValue={data?.applicant_name || ""}
-                            placeholder="Enter applicant name"
-                            className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
-                        />
-                    </div>
-
-                    {/* PAN Number */}
-                    <div className="space-y-2">
-                        <label
-                            htmlFor="pan-number"
-                            className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                            name="applicant_id"
+                            defaultValue={data?.applicant_id || ""}
+                            className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                            {...register("applicant_id", {
+                                required: {
+                                    value: true,
+                                    message: "Field cannot remain empty"
+                                }
+                            })}
                         >
-                            PAN Number
-                        </label>
+                            <option value="" disabled>
+                                Select applicant
+                            </option>
 
-                        <input
-                            id="pan-number"
-                            name="pan_number"
-                            type="text"
-                            maxLength={10}
-                            defaultValue={data?.pan_number || ""}
-                            placeholder="Enter PAN number"
-                            className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm uppercase tracking-wider text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
-                        />
+                            {applicants?.map((applicant) => (
+                                <option
+                                    key={applicant.id}
+                                    value={applicant.id}
+                                >
+                                    {applicant.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
                     {/* Account Number */}
@@ -96,6 +129,12 @@ const BankAccountForm = ({ mode, data, onClose}) => {
                             defaultValue={data?.account_number || ""}
                             placeholder="Enter account number"
                             className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm tracking-wide text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
+                             {...register("account_number", {
+                                required: {
+                                    value: true,
+                                    message: "Field cannot remain empty"
+                                }
+                            })}
                         />
                     </div>
 
@@ -115,6 +154,12 @@ const BankAccountForm = ({ mode, data, onClose}) => {
                             defaultValue={data?.bank_name || ""}
                             placeholder="Enter bank name"
                             className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
+                             {...register("bank_name", {
+                                required: {
+                                    value: true,
+                                    message: "Field cannot remain empty"
+                                }
+                            })}
                         />
                     </div>
 
@@ -135,6 +180,12 @@ const BankAccountForm = ({ mode, data, onClose}) => {
                             defaultValue={data?.ifsc_code || ""}
                             placeholder="Enter IFSC code"
                             className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm uppercase tracking-wider text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
+                             {...register("ifsc_code", {
+                                required: {
+                                    value: true,
+                                    message: "Field cannot remain empty"
+                                }
+                            })}
                         />
                     </div>
 

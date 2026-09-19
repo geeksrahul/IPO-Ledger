@@ -10,6 +10,7 @@ import BankDataColumn from "./BankDataColumn";
 import BankDataRow from "./BankDataRow";
 import BankDataCard from "./BankDataCard";
 import BankAccountForm from "./BankAccountForm";
+import { useSelector } from "react-redux";
 
 
 const Banks = () => {
@@ -17,36 +18,10 @@ const Banks = () => {
         mode: null,
         data: {},
     })
-    const bankData = [
-        {
-            applicant_id: 1,
-            applicant_name: "Rahul Baraiya",
-            pan_number: "ABCDE1234F",
-            account_number: "123456789012",
-            bank_name: "HDFC Bank",
-            ifsc_code: "HDFC0001234",
-        },
-        {
-            applicant_id: 2,
-            applicant_name: "Amit Patel",
-            pan_number: "FGHIJ5678K",
-            account_number: "234567890123",
-            bank_name: "State Bank of India",
-            ifsc_code: "SBIN0004567",
-        },
-        {
-            applicant_id: 3,
-            applicant_name: "Neha Shah",
-            pan_number: "KLMNO9012P",
-            account_number: "345678901234",
-            bank_name: "ICICI Bank",
-            ifsc_code: "ICIC0007890",
-        },
-    ];
+    const bankData = useSelector(state => state.bank.data);
 
     const tableColumns = [
-        "Applicant Name",
-        "PAN Number",
+        "Applicant Id",
         "Account Number",
         "Bank Name",
         "IFSC Code",

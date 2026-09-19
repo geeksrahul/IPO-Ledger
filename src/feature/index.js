@@ -1,4 +1,5 @@
+import { bankReducer } from "./accounts/bankSlice";
 import { applicantsReducer } from "./applicants/applicantsSlice";
 import { authReducer } from "./auth/authSlice";
-applicantsReducer
-export {authReducer, applicantsReducer}
+
+export {authReducer, applicantsReducer, bankReducer}
