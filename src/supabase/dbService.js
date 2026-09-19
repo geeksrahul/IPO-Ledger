@@ -47,6 +47,32 @@ class DbService {
             return this.supabase.from("bank-accounts").update(bankAccountData).eq("id", bankAccountId).select().single();
         })
     }
+    // CRUD: Demat Account
+    async getDematAccounts(){
+        return executeService(() => {
+            return this.supabase.from("demats").select("*");
+        });
+    }
+    async getDematAccountById(id) {
+        return executeService(() => {
+            return this.supabase.from("demats").select("*").eq("id", id).single();
+        });
+    }
+    async createDematAccount(dematAccountData) {
+        return executeService(() => {
+            return this.supabase.from("demats").insert(dematAccountData).select().single();
+        });
+    }
+    async removeDematAccount(dematId) {
+        return executeService(() => {
+            return this.supabase.from("demats").delete().eq("id", dematId).select().single();
+        });
+    }
+    async updateDematAccount(dematId, dematAccountData) {
+        return executeService(() => {
+            return this.supabase.from("demats").update(dematAccountData).eq("id", dematId).select().single();
+        });
+    }
 }
 
 export const dbService = new DbService(supabase);
