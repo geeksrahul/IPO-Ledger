@@ -8,7 +8,12 @@ class DbService {
     // CRUD: Applicant
     async getApplicants() {
         return executeService(()=> {
-           return this.supabase.from("applicants").select("*");
+            return this.supabase.from("applicants").select("*");
+        });
+    }
+    async getApplicantById(id) {
+        return executeService(() => {
+            return this.supabase.from("applicants").select("*").eq("id", id).single();
         });
     }
     async createApplicant(applicant) {

@@ -1,7 +1,37 @@
 import { Building2, X } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { dbService } from "../../../supabase";
+import { addDematAccount, updateDematAccount } from "../../../feature/accounts/dematSlice";
 
 const DematAccountForm = ({ mode, data, onClose }) => {
     const isUpdateMode = mode === "update";
+    const {register, handleSubmit} = useForm();
+    const user_id = useSelector(
+        state => state.auth.userData.id   
+    )
+    const applicants = useSelector(
+        state => state.applicants.data
+    );
+    const dispatch = useDispatch();
+    const handleDematAccountForm = async (formData) => {
+        if(isUpdateMode) {
+            const response = await dbService.updateDematAccount(data.id, {...formData, user_id});
+            if(response.success) {
+                dispatch(updateDematAccount({id: data.id, data: response.data}));
+            } else {
+                console.log("cannot update demat account");
+            }
+        } else {
+            const response = await dbService.createDematAccount({...formData, user_id});
+            if(response.success) {
+                dispatch(addDematAccount(response.data));
+            } else {
+                console.log("cannot add demat account", response.error);
+            }
+        }
+        onClose();
+    }
     return (
         <div className="h-screen fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-sm">
             <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-900">
@@ -39,62 +69,42 @@ const DematAccountForm = ({ mode, data, onClose }) => {
                 {/* Form */}
                 <form
                     className="space-y-5 px-6 py-6"
+                    onSubmit={handleSubmit(handleDematAccountForm)}
                 >
                     {/* Applicant Name */}
-                    <div>
+                    <div className="space-y-2">
                         <label
-                            htmlFor="applicant_name"
-                            className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300"
+                            htmlFor="applicant-name"
+                            className="text-sm font-medium text-slate-700 dark:text-slate-300"
                         >
-                            Applicant Name
+                            Select Applicant
                         </label>
 
-                        <input
-                            id="applicant_name"
-                            name="applicant_name"
-                            type="text"
-                            placeholder="Enter applicant name"
-                            defaultValue={data?.applicant_name || ""}
-                            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
-                        />
-                    </div>
-
-                    {/* PAN Number */}
-                    <div>
-                        <label
-                            htmlFor="pan"
-                            className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300"
+                        <select
+                            id="applicant-name"
+                            name="applicant_id"
+                            defaultValue={data?.applicant_id || ""}
+                            className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                            {...register("applicant_id", {
+                                required: {
+                                    value: true,
+                                    message: "Field cannot remain empty"
+                                }
+                            })}
                         >
-                            PAN Number
-                        </label>
+                            <option value="" disabled>
+                                Select applicant
+                            </option>
 
-                        <input
-                            id="pan"
-                            name="pan"
-                            type="text"
-                            placeholder="Enter PAN number"
-                            defaultValue={data?.pan || ""}
-                            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm uppercase text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
-                        />
-                    </div>
-
-                    {/* Applicant Record */}
-                    <div>
-                        <label
-                            htmlFor="applicant_Record"
-                            className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300"
-                        >
-                            Applicant Record
-                        </label>
-
-                        <input
-                            id="applicant_Record"
-                            name="applicant_Record"
-                            type="text"
-                            placeholder="Enter applicant record ID"
-                            defaultValue={data?.applicant_Record || ""}
-                            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
-                        />
+                            {applicants?.map((applicant) => (
+                                <option
+                                    key={applicant.id}
+                                    value={applicant.id}
+                                >
+                                    {applicant.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
                     {/* Broker */}
@@ -103,7 +113,7 @@ const DematAccountForm = ({ mode, data, onClose }) => {
                             htmlFor="broker"
                             className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300"
                         >
-                            Broker
+                            Broker Name (i.e. Angle One, Grow, Upstox, Zerodha)
                         </label>
 
                         <input
@@ -113,6 +123,12 @@ const DematAccountForm = ({ mode, data, onClose }) => {
                             placeholder="Enter broker name"
                             defaultValue={data?.broker || ""}
                             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+                             {...register("broker", {
+                                required : {
+                                    value: true,
+                                    message: "Field cannot remain empty"
+                                }
+                            })}
                         />
                     </div>
 
@@ -130,8 +146,22 @@ const DematAccountForm = ({ mode, data, onClose }) => {
                             name="loginPin"
                             type="password"
                             placeholder="Enter login PIN"
-                            defaultValue={data?.loginPin || ""}
+                            defaultValue={data?.pin || ""}
                             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+                             {...register("pin", {
+                                required : {
+                                    value: true,
+                                    message: "Field cannot remain empty"
+                                },
+                                minLength : {
+                                    value: 4,
+                                    message: "login pin must be of 4 digit"
+                                },
+                                maxLength : {
+                                    value: 4,
+                                    message: "login pin must be of 4 digit"
+                                }
+                            })}
                         />
                     </div>
 
@@ -151,6 +181,20 @@ const DematAccountForm = ({ mode, data, onClose }) => {
                             placeholder="Enter TPIN"
                             defaultValue={data?.tpin || ""}
                             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+                               {...register("tpin", {
+                                required : {
+                                    value: true,
+                                    message: "Field cannot remain empty"
+                                },
+                                minLength : {
+                                    value: 6,
+                                    message: "login pin must be of 4 digit"
+                                },
+                                maxLength : {
+                                    value: 6,
+                                    message: "login pin must be of 4 digit"
+                                }
+                            })}
                         />
                     </div>
 

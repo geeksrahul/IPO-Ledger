@@ -9,42 +9,17 @@ import DematDataRow from "./DematDataRow";
 import DematDataCard from "./DematDataCard";
 import { useState } from "react";
 import DematAccountForm from "./DematAccountForm";
+import { useSelector } from "react-redux";
 
 const Demats = () => {
     const [dematAccountForm, setDematAccountForm] = useState({
         mode: null,
         data: {},
     })
-    const dematData = [
-        {
-            applicant_id: 1,
-            applicant_name: "Rahul Baraiya",
-            pan: "ABCDE1234F",
-            broker: "Zerodha",
-            loginPin: "123456",
-            tpin: "456789",
-        },
-        {
-            applicant_id: 2,
-            applicant_name: "Amit Patel",
-            pan: "FGHIJ5678K",
-            broker: "Groww",
-            loginPin: "234567",
-            tpin: "567890",
-        },
-        {
-            applicant_id: 3,
-            applicant_name: "Neha Shah",
-            pan: "KLMNO9012P",
-            broker: "Upstox",
-            loginPin: "345678",
-            tpin: "678901",
-        },
-    ];
+    const dematData = useSelector(state => state.demat.data);
 
     const tableColumns = [
         "Applicant Name",
-        "PAN",
         "Broker",
         "Login PIN",
         "TPIN",
