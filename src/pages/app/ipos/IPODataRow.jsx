@@ -49,7 +49,7 @@ function IPODataRow({ipo}) {
             </td>
 
             <td className="px-6 py-4">
-                <IPOStatusBadge status={"Open"} />
+                <IPOStatusBadge status={ipo.status} />
             </td>
         </tr>
     )

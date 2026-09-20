@@ -22,7 +22,7 @@ function IPODataCard({ipo}) {
                     </div>
                 </div>
 
-                <IPOStatusBadge status={"Open"} />
+                <IPOStatusBadge status={ipo.status} />
             </div>
 
             {/* Price + Lot */}

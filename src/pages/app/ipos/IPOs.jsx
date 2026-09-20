@@ -16,30 +16,7 @@ import IPOSummaryCard from "./IPOSummaryCard";
 import { useState } from "react";
 import IPOForm from "./IPOForm";
 import { useSelector } from "react-redux";
-
-const summaryCards = [
-  {
-    label: "Total IPOs",
-    value: "24",
-    icon: Layers3,
-  },
-  {
-    label: "Open IPOs",
-    value: "04",
-    icon: TrendingUp,
-  },
-  {
-    label: "Upcoming",
-    value: "06",
-    icon: Clock3,
-  },
-  {
-    label: "Closed",
-    value: "14",
-    icon: CalendarDays,
-  },
-];
-
+import getIPOStatus from "../../../utils/ipo";
 
 const tableColumns = [
   "Company Name",
@@ -53,11 +30,37 @@ const tableColumns = [
 ];
 
 function IPOs() {
-  const ipoData = useSelector(state => state.ipo.data);
+  const ipoData = useSelector(state => state.ipo.data).map(ipo => {
+    return {...ipo, status: getIPOStatus(ipo)}
+  });
+  const summaryCards = [
+    {
+      label: "Total IPOs",
+      value: ipoData.length,
+      icon: Layers3,
+    },
+    {
+      label: "Open IPOs",
+      value: ipoData.filter(ipo => ipo.status === "open").length,
+      icon: TrendingUp,
+    },
+    {
+      label: "Upcoming",
+      value: ipoData.filter(ipo => ipo.status === "upcoming").length,
+      icon: Clock3,
+    },
+    {
+      label: "Closed",
+      value: ipoData.filter(ipo => ipo.status === "closed").length,
+      icon: CalendarDays,
+    },
+  ];
+
   const [ipoForm, setIPOForm] = useState({
     mode: null,
     data: {},
-  })
+  });
+
   return (
     <section className="space-y-6">
       {ipoForm.mode && 
