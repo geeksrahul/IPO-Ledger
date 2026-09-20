@@ -8,21 +8,21 @@ function IPODataCard({ipo}) {
             <div className="flex items-start justify-between gap-3">
                 <div className="flex min-w-0 items-center gap-3">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-xs font-semibold text-emerald-700 dark:bg-emerald-400/10 dark:text-emerald-400">
-                        {ipo.symbol.slice(0, 2)}
+                        {ipo.company_name.toUpperCase().slice(0, 2)}
                     </div>
 
                     <div className="min-w-0">
                         <h3 className="truncate font-semibold text-gray-900 dark:text-white">
-                            {ipo.company}
+                            {ipo.company_name}
                         </h3>
 
                         <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
-                            {ipo.symbol}
+                            {ipo.company_name.split(" ")[0]}
                         </p>
                     </div>
                 </div>
 
-                <IPOStatusBadge status={ipo.status} />
+                <IPOStatusBadge status={"Open"} />
             </div>
 
             {/* Price + Lot */}
@@ -33,7 +33,7 @@ function IPODataCard({ipo}) {
                     </p>
 
                     <p className="mt-1 font-semibold text-gray-900 dark:text-white">
-                        {ipo.cutoffPrice}
+                        {ipo.cutoff_price}
                     </p>
                 </div>
 
@@ -43,7 +43,7 @@ function IPODataCard({ipo}) {
                     </p>
 
                     <p className="mt-1 font-semibold text-gray-900 dark:text-white">
-                        {ipo.lotSize} shares
+                        {ipo.lot_size} shares
                     </p>
                 </div>
             </div>
@@ -56,7 +56,7 @@ function IPODataCard({ipo}) {
                     </p>
 
                     <p className="mt-1 text-gray-700 dark:text-gray-300">
-                        {ipo.openDate}
+                        {ipo.open_date}
                     </p>
                 </div>
 
@@ -66,7 +66,7 @@ function IPODataCard({ipo}) {
                     </p>
 
                     <p className="mt-1 text-gray-700 dark:text-gray-300">
-                        {ipo.closeDate}
+                        {ipo.close_date}
                     </p>
                 </div>
 
@@ -76,7 +76,7 @@ function IPODataCard({ipo}) {
                     </p>
 
                     <p className="mt-1 text-gray-700 dark:text-gray-300">
-                        {ipo.allotmentDate}
+                        {ipo.allotment_date}
                     </p>
                 </div>
 
@@ -86,7 +86,7 @@ function IPODataCard({ipo}) {
                     </p>
 
                     <p className="mt-1 text-gray-700 dark:text-gray-300">
-                        {ipo.listingDate}
+                        {ipo.listing_date}
                     </p>
                 </div>
             </div>

@@ -13,6 +13,9 @@ import IPODataCard from "./IPODataCard";
 import IPODataColumn from "./IPODataColumn";
 import IPODataRow from "./IPODataRow";
 import IPOSummaryCard from "./IPOSummaryCard";
+import { useState } from "react";
+import IPOForm from "./IPOForm";
+import { useSelector } from "react-redux";
 
 const summaryCards = [
   {
@@ -37,68 +40,6 @@ const summaryCards = [
   },
 ];
 
-const ipoData = [
-  {
-    id: 1,
-    company: "ABC Technologies",
-    symbol: "ABCT",
-    cutoffPrice: "₹125",
-    lotSize: 120,
-    openDate: "18 Sep 2026",
-    closeDate: "22 Sep 2026",
-    allotmentDate: "23 Sep 2026",
-    listingDate: "25 Sep 2026",
-    status: "Open",
-  },
-  {
-    id: 2,
-    company: "Nova Industries",
-    symbol: "NOVA",
-    cutoffPrice: "₹210",
-    lotSize: 70,
-    openDate: "24 Sep 2026",
-    closeDate: "28 Sep 2026",
-    allotmentDate: "29 Sep 2026",
-    listingDate: "01 Oct 2026",
-    status: "Upcoming",
-  },
-  {
-    id: 3,
-    company: "Vertex Healthcare",
-    symbol: "VERTEX",
-    cutoffPrice: "₹385",
-    lotSize: 38,
-    openDate: "10 Sep 2026",
-    closeDate: "14 Sep 2026",
-    allotmentDate: "15 Sep 2026",
-    listingDate: "17 Sep 2026",
-    status: "Listed",
-  },
-  {
-    id: 4,
-    company: "GreenGrid Energy",
-    symbol: "GREEN",
-    cutoffPrice: "₹160",
-    lotSize: 90,
-    openDate: "05 Sep 2026",
-    closeDate: "09 Sep 2026",
-    allotmentDate: "10 Sep 2026",
-    listingDate: "14 Sep 2026",
-    status: "Allotment",
-  },
-  {
-    id: 5,
-    company: "FinEdge Solutions",
-    symbol: "FINEDGE",
-    cutoffPrice: "₹275",
-    lotSize: 54,
-    openDate: "01 Sep 2026",
-    closeDate: "04 Sep 2026",
-    allotmentDate: "05 Sep 2026",
-    listingDate: "08 Sep 2026",
-    status: "Closed",
-  },
-];
 
 const tableColumns = [
   "Company Name",
@@ -112,8 +53,24 @@ const tableColumns = [
 ];
 
 function IPOs() {
+  const ipoData = useSelector(state => state.ipo.data);
+  const [ipoForm, setIPOForm] = useState({
+    mode: null,
+    data: {},
+  })
   return (
     <section className="space-y-6">
+      {ipoForm.mode && 
+      <IPOForm 
+        mode={ipoForm.mode}
+        data={ipoForm.data}
+        onClose={()=>{
+          setIPOForm({
+            mode:null,
+            data:{},
+          })
+        }}
+      />}
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-1">
@@ -179,6 +136,19 @@ function IPOs() {
             >
               All Statuses
               <ChevronDown className="ml-2 h-4 w-4" />
+            </button>
+
+            <button
+              type="button"
+              className="inline-flex h-10 items-center justify-center rounded-lg border bg-emerald-600 text-white border-gray-200 px-5 text-sm font-medium transition-colors disabled:cursor-not-allowed dark:border-gray-700 dark:text-gray-400"
+              onClick={() => {
+                setIPOForm({
+                  mode: "add",
+                  data: {},
+                })
+              }}
+            >
+              Add IPO 
             </button>
           </div>
         </div>

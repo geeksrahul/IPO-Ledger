@@ -78,6 +78,32 @@ class DbService {
             return this.supabase.from("demats").update(dematAccountData).eq("id", dematId).select().single();
         });
     }
+    // CRUD: IPO
+    async getIPOs() {
+        return executeService(() => {
+            return this.supabase.from("IPO").select("*");
+        });
+    }
+    async getIPOById(id) {
+        return executeService(() => {
+            return this.supabase.from("IPO").select("*").eq("id", id).single();
+        });
+    }
+    async createIPO(ipoData) {
+        return executeService(() => {
+            return this.supabase.from("IPO").insert(ipoData).select().single();
+        });
+    }
+    async removeIPO(ipoId) {
+        return executeService(() => {
+            return this.supabase.from("IPO").delete().eq("id", ipoId).select().single();
+        });
+    }
+    async updateIPO(ipoId, ipoData) {
+        return executeService(() => {
+            return this.supabase.from("IPO").update(ipoData).eq("id", ipoId).select().single();
+        });
+    }
 }
 
 export const dbService = new DbService(supabase);
