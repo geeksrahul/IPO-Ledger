@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { authReducer, applicantsReducer, bankReducer, dematReducer, ipoReducer } from "../feature";
+import { authReducer, applicantsReducer, bankReducer, dematReducer, ipoReducer, applicationsReducer } from "../feature";
 
 const store = configureStore({
     reducer:{
@@ -8,6 +8,7 @@ const store = configureStore({
         bank: bankReducer,
         demat: dematReducer,
         ipo: ipoReducer,
+        application: applicationsReducer,
     }
 })
 

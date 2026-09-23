@@ -7,6 +7,7 @@ import { setApplicantsData } from "../../feature/applicants/applicantsSlice";
 import { setBankAccountData } from "../../feature/accounts/bankSlice";
 import { setDematAccountData } from "../../feature/accounts/dematSlice";
 import { setIPOs } from "../../feature/ipo/ipoSlice";
+import { setApplicationsData } from "../../feature/application/applicationSlice";
 
 function AppLayout() {
   const dispatch = useDispatch();
@@ -43,10 +44,19 @@ function AppLayout() {
         console.log(response.error);
       }
     }
+    const loadApplicationData = async () => {
+      const response = await dbService.getApplications();
+      if(response.success) {
+        dispatch(setApplicationsData(response.data));
+      } else {
+        console.log(response.error);
+      }   
+    }
     setApplicantData();
     loadBankData();
     loadDematData();
     loadIPOData();
+    loadApplicationData();
   }, [dispatch]);
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-white lg:grid lg:grid-cols-[80px_minmax(0,1fr)] xl:grid-cols-[256px_minmax(0,1fr)]">

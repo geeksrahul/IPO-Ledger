@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     data: [],
-    error: null,
 }
 
 const applicantsSlice = createSlice({

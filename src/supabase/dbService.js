@@ -7,7 +7,7 @@ class DbService {
     }
     // CRUD: Applicant
     async getApplicants() {
-        return executeService(()=> {
+        return executeService(() => {
             return this.supabase.from("applicants").select("*");
         });
     }
@@ -34,8 +34,8 @@ class DbService {
     // CRUD: bank accounts
     async getBankAccounts() {
         return executeService(() => {
-            return this.supabase.from("bank-accounts").select("*");
-        })
+            return this.supabase.from("bank-accounts").select(`*, applicants(name)`);
+        });
     }
     async createBankAccount(bankAccount) {
         return executeService(() => {
@@ -53,9 +53,9 @@ class DbService {
         })
     }
     // CRUD: Demat Account
-    async getDematAccounts(){
+    async getDematAccounts() {
         return executeService(() => {
-            return this.supabase.from("demats").select("*");
+            return this.supabase.from("demats").select(`*, applicants(name)`);
         });
     }
     async getDematAccountById(id) {
@@ -102,6 +102,56 @@ class DbService {
     async updateIPO(ipoId, ipoData) {
         return executeService(() => {
             return this.supabase.from("IPO").update(ipoData).eq("id", ipoId).select().single();
+        });
+    }
+    // CRUD: Application
+    async getApplications() {
+        return executeService(() => {
+            return this.supabase
+                .from("application")
+                .select(`*, IPO(company_name), applicants(name), bank-accounts(bank_name), demats(broker)`);
+        });
+    }
+
+    async getApplicationById(id) {
+        return executeService(() => {
+            return this.supabase
+                .from("Application")
+                .select("*")
+                .eq("id", id)
+                .single();
+        });
+    }
+
+    async createApplication(applicationData) {
+        return executeService(() => {
+            return this.supabase
+                .from("application")
+                .insert(applicationData)
+                .select()
+                .single();
+        });
+    }
+
+    async removeApplication(applicationId) {
+        return executeService(() => {
+            return this.supabase
+                .from("Application")
+                .delete()
+                .eq("id", applicationId)
+                .select()
+                .single();
+        });
+    }
+
+    async updateApplication(applicationId, applicationData) {
+        return executeService(() => {
+            return this.supabase
+                .from("application")
+                .update(applicationData)
+                .eq("id", applicationId)
+                .select()
+                .single();
         });
     }
 }
