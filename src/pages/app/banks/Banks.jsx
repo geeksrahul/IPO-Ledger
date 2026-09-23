@@ -124,7 +124,7 @@ const Banks = () => {
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden">
                     {bankData.map((bank) => (
                         <BankDataCard
-                            key={bank.applicant_id}
+                            key={bank.id}
                             bank={bank}
                             onClick={() => {
                                 setBankForm({
@@ -145,7 +145,7 @@ const Banks = () => {
                             <tbody>
                                 {bankData.map((bank) => (
                                     <BankDataRow
-                                        key={bank.applicant_id}
+                                        key={bank.id}
                                         bank={bank}
                                         onClick={() => {
                                             setBankForm({

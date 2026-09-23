@@ -8,7 +8,7 @@ import {
 
 const DematDataCard = ({ demat, onEdit }) => {
     const {
-        applicant_name,
+        applicants,
         pan,
         broker,
         loginPin,
@@ -27,7 +27,7 @@ const DematDataCard = ({ demat, onEdit }) => {
 
                     <div className="min-w-0">
                         <h3 className="truncate font-semibold text-slate-800 dark:text-slate-100">
-                            {applicant_name}
+                            {applicants?.name}
                         </h3>
 
                         <p className="text-sm text-slate-500 dark:text-slate-400">
@@ -40,7 +40,7 @@ const DematDataCard = ({ demat, onEdit }) => {
                 <button
                     type="button"
                     onClick={onEdit}
-                    aria-label={`Edit ${applicant_name}'s demat account`}
+                    aria-label={`Edit ${applicants?.name}'s demat account`}
                     className="shrink-0 rounded-lg p-2 text-slate-500 transition hover:bg-emerald-50 hover:text-emerald-600 dark:text-slate-400 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-400"
                 >
                     <Edit className="h-4 w-4" />

@@ -39,17 +39,17 @@ class DbService {
     }
     async createBankAccount(bankAccount) {
         return executeService(() => {
-            return this.supabase.from("bank-accounts").insert(bankAccount).select().single();
+            return this.supabase.from("bank-accounts").insert(bankAccount).select(`*, applicants(name)`).single();
         })
     }
     async removeBankAccount(bankAccountId) {
         return executeService(() => {
-            return this.supabase.from("bank-accounts").delete().eq("id", bankAccountId).select().single();
+            return this.supabase.from("bank-accounts").delete().eq("id", bankAccountId).select(`*, applicants(name)`).single();
         })
     }
     async updateBankAccount(bankAccountId, bankAccountData) {
         return executeService(() => {
-            return this.supabase.from("bank-accounts").update(bankAccountData).eq("id", bankAccountId).select().single();
+            return this.supabase.from("bank-accounts").update(bankAccountData).eq("id", bankAccountId).select(`*, applicants(name)`).single();
         })
     }
     // CRUD: Demat Account
@@ -65,17 +65,17 @@ class DbService {
     }
     async createDematAccount(dematAccountData) {
         return executeService(() => {
-            return this.supabase.from("demats").insert(dematAccountData).select().single();
+            return this.supabase.from("demats").insert(dematAccountData).select(`*, applicants(name)`).single();
         });
     }
     async removeDematAccount(dematId) {
         return executeService(() => {
-            return this.supabase.from("demats").delete().eq("id", dematId).select().single();
+            return this.supabase.from("demats").delete().eq("id", dematId).select(`*, applicants(name)`).single();
         });
     }
     async updateDematAccount(dematId, dematAccountData) {
         return executeService(() => {
-            return this.supabase.from("demats").update(dematAccountData).eq("id", dematId).select().single();
+            return this.supabase.from("demats").update(dematAccountData).eq("id", dematId).select(`*, applicants(name)`).single();
         });
     }
     // CRUD: IPO
@@ -117,7 +117,7 @@ class DbService {
         return executeService(() => {
             return this.supabase
                 .from("Application")
-                .select("*")
+                .select(`*, IPO(company_name), applicants(name), bank-accounts(bank_name), demats(broker)`)
                 .eq("id", id)
                 .single();
         });
@@ -128,7 +128,7 @@ class DbService {
             return this.supabase
                 .from("application")
                 .insert(applicationData)
-                .select()
+                .select(`*, IPO(company_name), applicants(name), bank-accounts(bank_name), demats(broker)`)
                 .single();
         });
     }
@@ -139,7 +139,7 @@ class DbService {
                 .from("Application")
                 .delete()
                 .eq("id", applicationId)
-                .select()
+                .select(`*, IPO(company_name), applicants(name), bank-accounts(bank_name), demats(broker)`)
                 .single();
         });
     }
@@ -150,7 +150,7 @@ class DbService {
                 .from("application")
                 .update(applicationData)
                 .eq("id", applicationId)
-                .select()
+                .select(`*, IPO(company_name), applicants(name), bank-accounts(bank_name), demats(broker)`)
                 .single();
         });
     }

@@ -8,7 +8,7 @@ import {
 
 const BankDataCard = ({ bank, onClick }) => {
     const {
-        applicant_name,
+        applicants,
         pan_number,
         account_number,
         bank_name,
@@ -28,7 +28,7 @@ const BankDataCard = ({ bank, onClick }) => {
 
                     <div className="min-w-0">
                         <h3 className="truncate font-semibold text-slate-800 dark:text-slate-100">
-                            {applicant_name}
+                            {applicants?.name}
                         </h3>
 
                         <p className="truncate text-sm text-slate-500 dark:text-slate-400">
@@ -41,7 +41,7 @@ const BankDataCard = ({ bank, onClick }) => {
                 <button
                     type="button"
                     onClick={onClick}
-                    aria-label={`Edit ${applicant_name}'s bank account`}
+                    aria-label={`Edit ${applicants?.name}'s bank account`}
                     className="shrink-0 rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-emerald-600 dark:hover:bg-slate-800 dark:hover:text-emerald-400"
                 >
                     <Edit className="h-4 w-4" />

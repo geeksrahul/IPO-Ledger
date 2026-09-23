@@ -15,14 +15,12 @@ const BankAccountForm = ({ mode, data, onClose }) => {
         if(isUpdateMode) {
             const response = await dbService.updateBankAccount(
                 data.id,
-                {
-                    ...formData, user_id
-                } 
+                {...formData, user_id}    
             );
             if(response.success) {
                 dispatch(updateBankAccount({
                     id: data.id,
-                    data : {...formData, user_id}
+                    data : response.data,
                 }));
                 console.log("bank account updated");
             } else {
@@ -31,7 +29,7 @@ const BankAccountForm = ({ mode, data, onClose }) => {
         } else {
             const response = await dbService.createBankAccount({...formData, user_id });
             if(response.success) {
-                dispatch(addBankAccount(formData));
+                dispatch(addBankAccount(response.data));
                 console.log("bank account added successfully");
             } else {
                 console.log("unable to add bank account ", response.error);

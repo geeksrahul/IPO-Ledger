@@ -1,30 +1,36 @@
-import { Building2, X } from "lucide-react";
+import { Building2, Eye, EyeOff, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { dbService } from "../../../supabase";
 import { addDematAccount, updateDematAccount } from "../../../feature/accounts/dematSlice";
+import { useState } from "react";
 
 const DematAccountForm = ({ mode, data, onClose }) => {
     const isUpdateMode = mode === "update";
-    const {register, handleSubmit} = useForm();
+    const { register, handleSubmit } = useForm();
     const user_id = useSelector(
-        state => state.auth.userData.id   
+        state => state.auth.userData.id
     )
     const applicants = useSelector(
         state => state.applicants.data
     );
+
+    const [showLoginPin, setShowLoginPin] = useState(false);
+    const [showTpin, setShowTpin] = useState(false);
+
+
     const dispatch = useDispatch();
     const handleDematAccountForm = async (formData) => {
-        if(isUpdateMode) {
-            const response = await dbService.updateDematAccount(data.id, {...formData, user_id});
-            if(response.success) {
-                dispatch(updateDematAccount({id: data.id, data: response.data}));
+        if (isUpdateMode) {
+            const response = await dbService.updateDematAccount(data.id, { ...formData, user_id });
+            if (response.success) {
+                dispatch(updateDematAccount({ id: data.id, data: response.data }));
             } else {
                 console.log("cannot update demat account");
             }
         } else {
-            const response = await dbService.createDematAccount({...formData, user_id});
-            if(response.success) {
+            const response = await dbService.createDematAccount({ ...formData, user_id });
+            if (response.success) {
                 dispatch(addDematAccount(response.data));
             } else {
                 console.log("cannot add demat account", response.error);
@@ -123,8 +129,8 @@ const DematAccountForm = ({ mode, data, onClose }) => {
                             placeholder="Enter broker name"
                             defaultValue={data?.broker || ""}
                             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
-                             {...register("broker", {
-                                required : {
+                            {...register("broker", {
+                                required: {
                                     value: true,
                                     message: "Field cannot remain empty"
                                 }
@@ -132,37 +138,52 @@ const DematAccountForm = ({ mode, data, onClose }) => {
                         />
                     </div>
 
-                    {/* Login PIN */}
+                    {/* Login Pin */}
                     <div>
                         <label
-                            htmlFor="loginPin"
+                            htmlFor="login-pin"
                             className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300"
                         >
-                            Login PIN
+                            Login Pin
                         </label>
 
-                        <input
-                            id="loginPin"
-                            name="loginPin"
-                            type="password"
-                            placeholder="Enter login PIN"
-                            defaultValue={data?.pin || ""}
-                            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
-                             {...register("pin", {
-                                required : {
-                                    value: true,
-                                    message: "Field cannot remain empty"
-                                },
-                                minLength : {
-                                    value: 4,
-                                    message: "login pin must be of 4 digit"
-                                },
-                                maxLength : {
-                                    value: 4,
-                                    message: "login pin must be of 4 digit"
-                                }
-                            })}
-                        />
+                        <div className="relative">
+                            <input
+                                id="login-pin"
+                                name="login-pin"
+                                type={showLoginPin ? "text" : "password"}
+                                placeholder="Enter TPIN"
+                                defaultValue={data?.pin || ""}
+                                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 pr-10 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+                                {...register("pin", {
+                                    required: {
+                                        value: true,
+                                        message: "Field cannot remain empty",
+                                    },
+                                    minLength: {
+                                        value: 4,
+                                        message: "Login pin must be 4 digits",
+                                    },
+                                    maxLength: {
+                                        value: 4,
+                                        message: "Login pin must be 4 digits",
+                                    },
+                                })}
+                            />
+
+                            <button
+                                type="button"
+                                onClick={() => setShowLoginPin((prev) => !prev)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600 dark:hover:text-slate-200"
+                                aria-label={showLoginPin ? "Hide Login Pin" : "Show Login Pin"}
+                            >
+                                {showLoginPin ? (
+                                    <EyeOff className="h-4 w-4" />
+                                ) : (
+                                    <Eye className="h-4 w-4" />
+                                )}
+                            </button>
+                        </div>
                     </div>
 
                     {/* TPIN */}
@@ -174,28 +195,43 @@ const DematAccountForm = ({ mode, data, onClose }) => {
                             TPIN
                         </label>
 
-                        <input
-                            id="tpin"
-                            name="tpin"
-                            type="password"
-                            placeholder="Enter TPIN"
-                            defaultValue={data?.tpin || ""}
-                            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
-                               {...register("tpin", {
-                                required : {
-                                    value: true,
-                                    message: "Field cannot remain empty"
-                                },
-                                minLength : {
-                                    value: 6,
-                                    message: "login pin must be of 4 digit"
-                                },
-                                maxLength : {
-                                    value: 6,
-                                    message: "login pin must be of 4 digit"
-                                }
-                            })}
-                        />
+                        <div className="relative">
+                            <input
+                                id="tpin"
+                                name="tpin"
+                                type={showTpin ? "text" : "password"}
+                                placeholder="Enter TPIN"
+                                defaultValue={data?.tpin || ""}
+                                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 pr-10 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+                                {...register("tpin", {
+                                    required: {
+                                        value: true,
+                                        message: "Field cannot remain empty",
+                                    },
+                                    minLength: {
+                                        value: 6,
+                                        message: "TPIN must be 6 digits",
+                                    },
+                                    maxLength: {
+                                        value: 6,
+                                        message: "TPIN must be 6 digits",
+                                    },
+                                })}
+                            />
+
+                            <button
+                                type="button"
+                                onClick={() => setShowTpin((prev) => !prev)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600 dark:hover:text-slate-200"
+                                aria-label={showTpin ? "Hide TPIN" : "Show TPIN"}
+                            >
+                                {showTpin ? (
+                                    <EyeOff className="h-4 w-4" />
+                                ) : (
+                                    <Eye className="h-4 w-4" />
+                                )}
+                            </button>
+                        </div>
                     </div>
 
                     {/* Actions */}
