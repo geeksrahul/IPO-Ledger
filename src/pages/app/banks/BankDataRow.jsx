@@ -1,8 +1,8 @@
-import { Edit } from "lucide-react";
+import { Edit, Trash } from "lucide-react";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { dbService } from "../../../supabase";
 
-const BankDataRow = ({ bank, onClick }) => {
+const BankDataRow = ({ bank, onEdit, onRemove }) => {
     const {
         applicants,
         account_number,
@@ -34,11 +34,20 @@ const BankDataRow = ({ bank, onClick }) => {
             <td className="px-6 py-5 text-sm font-medium text-slate-700 dark:text-slate-300">
                 <button
                     type="button"
-                    onClick={onClick}
+                    onClick={onEdit}
                     aria-label={`Edit ${applicants?.name}`}
                     className="rounded-lg p-2 transition-colors hover:bg-slate-200 dark:hover:bg-slate-700"
                 >
                     <Edit className="h-4 w-4" />
+                </button>
+                {/* Delete Button */}
+                <button
+                    type="button"
+                    onClick={onRemove}
+                    aria-label={`Remove ${applicants?.name}'s bank account`}
+                    className="shrink-0 rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-emerald-600 dark:hover:bg-slate-800 dark:hover:text-emerald-400"
+                >
+                    <Trash className="h-4 w-4" />
                 </button>
             </td>
         </tr>

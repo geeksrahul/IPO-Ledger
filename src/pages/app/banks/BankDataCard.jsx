@@ -3,10 +3,11 @@ import {
     CreditCard,
     Edit,
     ShieldCheck,
+    Trash,
     UserRound,
 } from "lucide-react";
 
-const BankDataCard = ({ bank, onClick }) => {
+const BankDataCard = ({ bank, onEdit, onRemove }) => {
     const {
         applicants,
         pan_number,
@@ -37,15 +38,26 @@ const BankDataCard = ({ bank, onClick }) => {
                     </div>
                 </div>
 
-                {/* Edit Button */}
-                <button
-                    type="button"
-                    onClick={onClick}
-                    aria-label={`Edit ${applicants?.name}'s bank account`}
-                    className="shrink-0 rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-emerald-600 dark:hover:bg-slate-800 dark:hover:text-emerald-400"
-                >
-                    <Edit className="h-4 w-4" />
-                </button>
+                <div>
+                    {/* Edit Button */}
+                    <button
+                        type="button"
+                        onClick={onEdit}
+                        aria-label={`Edit ${applicants?.name}'s bank account`}
+                        className="shrink-0 rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-emerald-600 dark:hover:bg-slate-800 dark:hover:text-emerald-400"
+                    >
+                        <Edit className="h-4 w-4" />
+                    </button>
+                    {/* Delete Button */}
+                    <button
+                        type="button"
+                        onClick={onRemove}
+                        aria-label={`Remove ${applicants?.name}'s bank account`}
+                        className="shrink-0 rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-emerald-600 dark:hover:bg-slate-800 dark:hover:text-emerald-400"
+                    >
+                        <Trash className="h-4 w-4" />
+                    </button>
+                </div>
             </div>
 
             {/* Details */}

@@ -10,16 +10,34 @@ import BankDataColumn from "./BankDataColumn";
 import BankDataRow from "./BankDataRow";
 import BankDataCard from "./BankDataCard";
 import BankAccountForm from "./BankAccountForm";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { removeBankAccount } from "../../../feature/accounts/bankSlice";
+import { dbService } from "../../../supabase";
+import {ConfirmationPopup} from "../../../components/ui"
 
 const Banks = () => {
+    const dispatch = useDispatch();
+    const [deletePopup, setDeletePopup] = useState({
+        isOpen: false,
+        data: {},
+    })
     const [bankForm, setBankForm] = useState({
         mode: null,
         data: {},
     })
     const bankData = useSelector(state => state.bank.data);
-
+    const deleteBankAccount = async (bankId) => {
+        const response = await dbService.removeBankAccount(bankId);
+        if (response.success) {
+            dispatch(removeBankAccount(bankId));
+            console.log("bank_account_deleted_successfully");
+        } else {
+            console.log(
+                "unable to delete data from database",
+                response.error
+            );
+        }
+    }
     const tableColumns = [
         "Applicant Id",
         "Account Number",
@@ -126,12 +144,18 @@ const Banks = () => {
                         <BankDataCard
                             key={bank.id}
                             bank={bank}
-                            onClick={() => {
+                            onEdit={() => {
                                 setBankForm({
                                     mode: "update",
                                     data: bank,
                                 })
                             }}
+                             onRemove={() => {
+                                setDeletePopup({
+                                    isOpen: true,
+                                    data: bank,
+                                })
+                            }}  
                         />
                     ))}
                 </div>
@@ -147,12 +171,18 @@ const Banks = () => {
                                     <BankDataRow
                                         key={bank.id}
                                         bank={bank}
-                                        onClick={() => {
+                                        onEdit={() => {
                                             setBankForm({
                                                 mode: "update",
                                                 data: bank,
                                             })
                                         }}
+                                        onRemove={() => {
+                                            setDeletePopup({
+                                                isOpen: true,
+                                                data: bank,
+                                            })
+                                        }}  
                                     />
                                 ))}
                             </tbody>
@@ -165,8 +195,28 @@ const Banks = () => {
             <footer className="border-t border-slate-200 pt-4 text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
                 Showing {bankData.length} bank accounts.
             </footer>
+            {
+                deletePopup.isOpen &&
+                <ConfirmationPopup 
+                    message="Are you sure you want to delete bank account ?"
+                    onConfirm={async() => {
+                        await deleteBankAccount(deletePopup.data.id);
+                        setDeletePopup({
+                            isOpen: false,
+                            data: {},
+                        })
+                    }}
+                    onCancel={() => {
+                        setDeletePopup({
+                            isOpen: false,
+                            data: {},
+                        })
+                    }}
+                />
+            }
         </main>
     );
 };
+
 
 export default Banks;

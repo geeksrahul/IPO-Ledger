@@ -15,7 +15,7 @@ const bankSlice = createSlice({
             state.data.push(action.payload);
         },
         removeBankAccount : (state, action) => {
-            state.data = state.data.filter(account => account.id !== action.payload.id);
+            state.data = state.data.filter(account => account.id !== action.payload);
         },
         updateBankAccount : (state, action) => {
             const index = state.data.findIndex(account => account.id === action.payload.id);
