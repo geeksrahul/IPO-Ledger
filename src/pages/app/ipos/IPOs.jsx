@@ -8,15 +8,18 @@ import {
   Search,
   TrendingUp,
 } from "lucide-react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import IPODataCard from "./IPODataCard";
 import IPODataColumn from "./IPODataColumn";
 import IPODataRow from "./IPODataRow";
 import IPOSummaryCard from "./IPOSummaryCard";
-import { useState } from "react";
 import IPOForm from "./IPOForm";
-import { useSelector } from "react-redux";
 import getIPOStatus from "../../../utils/ipo";
+import { dbService } from "../../../supabase/dbService";
+import { removeIPO } from "../../../feature/ipo/ipoSlice";
+import { ConfirmationPopup } from "../../../components/ui"
 
 const tableColumns = [
   "Company Name",
@@ -27,11 +30,18 @@ const tableColumns = [
   "Allotment",
   "Listing",
   "Status",
+  "Action",
 ];
 
+
 function IPOs() {
+  const dispatch = useDispatch();
+  const [deletePopup, setDeletePopup] = useState({
+    isOpen: false,
+    data: {},
+  });
   const ipoData = useSelector(state => state.ipo.data).map(ipo => {
-    return {...ipo, status: getIPOStatus(ipo)}
+    return { ...ipo, status: getIPOStatus(ipo) }
   });
   const summaryCards = [
     {
@@ -61,19 +71,28 @@ function IPOs() {
     data: {},
   });
 
+  const deleteIPO = async (ipoId) => {
+    const response = await dbService.removeIPO(ipoId);
+    if (response.success) {
+      dispatch(removeIPO(ipoId));
+      console.log("IPO deleted successfully");
+    } else {
+      console.log("Unable to delete IPO data", response.error);
+    }
+  }
   return (
     <section className="space-y-6">
-      {ipoForm.mode && 
-      <IPOForm 
-        mode={ipoForm.mode}
-        data={ipoForm.data}
-        onClose={()=>{
-          setIPOForm({
-            mode:null,
-            data:{},
-          })
-        }}
-      />}
+      {ipoForm.mode &&
+        <IPOForm
+          mode={ipoForm.mode}
+          data={ipoForm.data}
+          onClose={() => {
+            setIPOForm({
+              mode: null,
+              data: {},
+            })
+          }}
+        />}
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-1">
@@ -151,7 +170,7 @@ function IPOs() {
                 })
               }}
             >
-              Add IPO 
+              Add IPO
             </button>
           </div>
         </div>
@@ -173,7 +192,21 @@ function IPOs() {
         {/* Mobile and Tablet Cards */}
         <div className="grid gap-3 p-4 lg:hidden">
           {ipoData.map((ipo) => (
-            <IPODataCard key={ipo.id} ipo={ipo} />
+            <IPODataCard
+              key={ipo.id} ipo={ipo}
+              onEdit={() => {
+                setIPOForm({
+                  mode: "update",
+                  data: ipo,
+                })
+              }}
+              onRemove={() => {
+                setDeletePopup({
+                  isOpen: true,
+                  data: ipo,
+                })
+              }}
+            />
           ))}
         </div>
 
@@ -190,7 +223,22 @@ function IPOs() {
 
             <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
               {ipoData.map((ipo) => (
-                <IPODataRow key={ipo.id} ipo={ipo} />
+                <IPODataRow
+                  key={ipo.id}
+                  ipo={ipo}
+                  onEdit={() => {
+                    setIPOForm({
+                      mode: "update",
+                      data: ipo,
+                    })
+                  }}
+                  onRemove={() => {
+                    setDeletePopup({
+                      isOpen: true,
+                      data: ipo,
+                    })
+                  }}
+                />
               ))}
             </tbody>
           </table>
@@ -202,6 +250,25 @@ function IPOs() {
           <p>Search and filtering will be added later.</p>
         </div>
       </div>
+      {
+        deletePopup.isOpen &&
+        <ConfirmationPopup
+          message="Are you sure you want to delete IPO ?"
+          onConfirm={async () => {
+            await deleteIPO(deletePopup.data.id);
+            setDeletePopup({
+              isOpen: false,
+              data: {},
+            })
+          }}
+          onCancel={() => {
+            setDeletePopup({
+              isOpen: false,
+              data: {},
+            })
+          }}
+        />
+      }
     </section>
   );
 }

@@ -1,7 +1,8 @@
 import React from 'react'
 import IPOStatusBadge from './IPOStatusBadge'
+import { Edit, Trash } from 'lucide-react'
 
-function IPODataRow({ipo}) {
+function IPODataRow({ipo, onEdit ,onRemove}) {
     return (
         <tr
             className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50"
@@ -50,6 +51,25 @@ function IPODataRow({ipo}) {
 
             <td className="px-6 py-4">
                 <IPOStatusBadge status={ipo.status} />
+            </td>
+            {/* Actions */}
+            <td className="px-6 py-5">
+                <button
+                    type="button"
+                    onClick={onEdit}
+                    aria-label={`Edit ${ipo?.name}'s demat account`}
+                    className="inline-flex rounded-lg p-2 text-slate-500 transition hover:bg-emerald-50 hover:text-emerald-600 dark:text-slate-400 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-400"
+                >
+                    <Edit className="h-4 w-4"/>
+                </button>
+                <button
+                    type="button"
+                    onClick={onRemove}
+                    aria-label={`Remove ${ipo?.name}'s demat account`}
+                    className="inline-flex rounded-lg p-2 text-slate-500 transition hover:bg-emerald-50 hover:text-emerald-600 dark:text-slate-400 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-400"
+                >
+                    <Trash className="h-4 w-4"/>
+                </button>
             </td>
         </tr>
     )

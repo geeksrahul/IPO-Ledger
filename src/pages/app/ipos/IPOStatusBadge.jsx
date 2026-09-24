@@ -6,7 +6,7 @@ function IPOStatusBadge({ status }) {
             "bg-emerald-50 text-emerald-700 ring-emerald-600/20 dark:bg-emerald-400/10 dark:text-emerald-400",
         closed:
             "bg-gray-100 text-gray-700 ring-gray-500/20 dark:bg-gray-400/10 dark:text-gray-400",
-        alloted:
+        allotted:
             "bg-amber-50 text-amber-700 ring-amber-600/20 dark:bg-amber-400/10 dark:text-amber-400",
         listed:
             "bg-purple-50 text-purple-700 ring-purple-600/20 dark:bg-purple-400/10 dark:text-purple-400",

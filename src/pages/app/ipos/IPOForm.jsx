@@ -2,16 +2,25 @@ import { CalendarDays, ChartNoAxesCombined, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { dbService } from "../../../supabase/dbService";
 import { useDispatch } from "react-redux";
-import { addIPO } from "../../../feature/ipo/ipoSlice";
+import { addIPO, updateIPO } from "../../../feature/ipo/ipoSlice";
 
 const IPOForm = ({ mode, data, onClose}) => {
   const isUpdateMode = mode === "update";
   const {register, handleSubmit} = useForm();
   const dispatch = useDispatch();
+
     // handle form submit
-  const handleIPOForm = async (formData) => {
+    const handleIPOForm = async (formData) => {
     if(isUpdateMode) {
-        // update logic here...
+      const response = await dbService.updateIPO(data.id, formData);
+      if(response.success) {
+        dispatch(updateIPO({
+          id: data.id,
+          data: response.data,
+        }));
+      } else {
+        console.log("unable to update ipo data", response.error);
+      }
     } else {
       const response = await dbService.createIPO(formData);
       if(response.success) {
@@ -19,7 +28,6 @@ const IPOForm = ({ mode, data, onClose}) => {
       } else {
         console.log("unable to add ipo data");
       }
-        // add logic here
     }
     onClose();
   }

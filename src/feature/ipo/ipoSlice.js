@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { act } from "react";
 
 const initialState = {
     data: [],
@@ -19,10 +20,13 @@ const ipoSlice = createSlice({
             if(index !== -1) {
                 state.data[index] = action.payload.data;
             }
+        },
+        removeIPO : (state, action) => {
+            state.data = state.data.filter(ipo => ipo.id !== action.payload);
         } 
     }
 });
 
-export const {setIPOs, addIPO} = ipoSlice.actions;
+export const {setIPOs, addIPO, removeIPO, updateIPO} = ipoSlice.actions;
 
 export const ipoReducer = ipoSlice.reducer;
