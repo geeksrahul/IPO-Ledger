@@ -34,7 +34,7 @@ function Applicants() {
 
   const [deletePopup, setDeletePopup] = useState({
     isOpen: false,
-    applicant: {},
+    data: {},
   })
 
   const applicantData = useSelector(state => state.applicants.data);
@@ -43,8 +43,8 @@ function Applicants() {
     const response = await dbService.deleteApplicant(applicantId);
 
     if (response.success) {
-      console.log("applicant_deleted_successfully");
       dispatch(removeApplicant(applicantId));
+      console.log("applicant_deleted_successfully");
     } else {
       console.log(
         "unable to delete data from database",
@@ -169,7 +169,7 @@ function Applicants() {
               onRemove={() => {
                 setDeletePopup({
                   isOpen: true,
-                  applicant,
+                  data: applicant,
                 })
               }}
             />
@@ -195,7 +195,7 @@ function Applicants() {
                     onRemove={() => {
                       setDeletePopup({
                         isOpen: true,
-                        applicant,
+                        data: applicant,
                       })
                     }}
                   />
@@ -216,17 +216,17 @@ function Applicants() {
         deletePopup.isOpen &&
         <ConfirmationPopup
           message="Are you sure you want to delete applicant ?"
-          onConfirm={() => {
-            deleteApplicant(deletePopup.applicant.id);
+          onConfirm={async () => {
+            await deleteApplicant(deletePopup.data.id);
              setDeletePopup({
               isOpen: false,
-              applicant: {},
+              data: {},
             })
           }}
           onCancel={() => {
             setDeletePopup({
               isOpen: false,
-              applicant: null,
+              data: null,
             })
           }}
         />

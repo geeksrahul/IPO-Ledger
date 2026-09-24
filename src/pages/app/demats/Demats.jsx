@@ -9,15 +9,32 @@ import DematDataRow from "./DematDataRow";
 import DematDataCard from "./DematDataCard";
 import { useState } from "react";
 import DematAccountForm from "./DematAccountForm";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { ConfirmationPopup } from "../../../components/ui";
+import { dbService } from "../../../supabase";
+import { removeDematAccount } from "../../../feature/accounts/dematSlice";
 
 const Demats = () => {
+    const dispatch = useDispatch();
     const [dematAccountForm, setDematAccountForm] = useState({
         mode: null,
         data: {},
     })
+    const [deletePopup, setDeletePopup] = useState({
+        isOpen : false,
+        data: {},
+    })
     const dematData = useSelector(state => state.demat.data);
 
+    const deleteDematAccount = async (dematId) => {
+        const response = await dbService.removeDematAccount(dematId);
+        if(response.success) {
+            dispatch(removeDematAccount(dematId));
+            console.log("demat account deleted successfully");
+        } else {
+            console.log("demat account can't be deleted :", response.error)
+        }
+    }
     const tableColumns = [
         "Applicant Name",
         "Broker",
@@ -130,6 +147,12 @@ const Demats = () => {
                                     mode: "update"
                                 })
                             }}
+                            onRemove={() => {
+                                setDeletePopup({
+                                    isOpen: true,
+                                    data: demat,
+                                })
+                            }}
                         />
                     ))}
                 </div>
@@ -151,6 +174,12 @@ const Demats = () => {
                                                 mode: "update"
                                             })
                                         }}
+                                        onRemove={() => {
+                                            setDeletePopup({
+                                                isOpen: true,
+                                                data: demat,
+                                            })
+                                        }}
                                     />
                                 ))}
                             </tbody>
@@ -163,6 +192,26 @@ const Demats = () => {
             <footer className="border-t border-slate-200 pt-4 text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
                 Showing {dematData.length} demat accounts.
             </footer>
+
+            {
+                deletePopup.isOpen &&
+                <ConfirmationPopup
+                    message="Are you sure, you want to delete demat account"
+                    onConfirm={async () => {
+                        await deleteDematAccount(deletePopup.data.id);
+                        setDeletePopup({
+                            isOpen: false,
+                            data: {},
+                        })
+                    }}
+                    onCancel={()=>{
+                        setDeletePopup({
+                            isOpen: false,
+                            data: {},
+                        })
+                    }} 
+                />
+            }
         </main>
     );
 };

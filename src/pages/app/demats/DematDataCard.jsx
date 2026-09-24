@@ -2,11 +2,12 @@ import {
     Edit,
     EyeOff,
     ShieldCheck,
+    Trash,
     UserRound,
     WalletCards,
 } from "lucide-react";
 
-const DematDataCard = ({ demat, onEdit }) => {
+const DematDataCard = ({ demat, onEdit, onRemove }) => {
     const {
         applicants,
         pan,
@@ -44,6 +45,14 @@ const DematDataCard = ({ demat, onEdit }) => {
                     className="shrink-0 rounded-lg p-2 text-slate-500 transition hover:bg-emerald-50 hover:text-emerald-600 dark:text-slate-400 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-400"
                 >
                     <Edit className="h-4 w-4" />
+                </button>
+                <button
+                    type="button"
+                    onClick={onRemove}
+                    aria-label={`Remove ${applicants?.name}'s demat account`}
+                    className="shrink-0 rounded-lg p-2 text-slate-500 transition hover:bg-emerald-50 hover:text-emerald-600 dark:text-slate-400 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-400"
+                >
+                    <Trash className="h-4 w-4" />
                 </button>
             </div>
 

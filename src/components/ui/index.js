@@ -1,3 +1,3 @@
 import Logo from "./Logo";
-
-export {Logo}
+import ConfirmationPopup from "./ConfirmationPopup.jsx"
+export {Logo, ConfirmationPopup}

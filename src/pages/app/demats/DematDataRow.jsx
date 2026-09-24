@@ -1,8 +1,8 @@
-import { Edit } from "lucide-react";
+import { Edit, Trash } from "lucide-react";
 import { dbService } from "../../../supabase";
 import { useEffect, useState } from "react";
 
-const DematDataRow = ({ demat, onEdit }) => {
+const DematDataRow = ({ demat, onEdit, onRemove }) => {
     const {
         applicant_id,
         applicants,
@@ -44,6 +44,14 @@ const DematDataRow = ({ demat, onEdit }) => {
                     className="inline-flex rounded-lg p-2 text-slate-500 transition hover:bg-emerald-50 hover:text-emerald-600 dark:text-slate-400 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-400"
                 >
                     <Edit className="h-4 w-4"/>
+                </button>
+                <button
+                    type="button"
+                    onClick={onRemove}
+                    aria-label={`Remove ${applicants?.name}'s demat account`}
+                    className="inline-flex rounded-lg p-2 text-slate-500 transition hover:bg-emerald-50 hover:text-emerald-600 dark:text-slate-400 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-400"
+                >
+                    <Trash className="h-4 w-4"/>
                 </button>
             </td>
         </tr>
