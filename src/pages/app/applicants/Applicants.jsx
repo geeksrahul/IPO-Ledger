@@ -10,7 +10,10 @@ import ApplicantDataColumn from "./ApplicantDataColumn";
 import ApplicantDataRow from "./ApplicantDataRow";
 import ApplicantForm from "./ApplicantForm";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import ConfirmationPopup from "../../../components/ui/ConfirmationPopup";
+import { dbService } from "../../../supabase";
+import { removeApplicant } from "../../../feature/applicants/applicantsSlice";
 
 const tableColumns = [
   "Name",
@@ -22,11 +25,33 @@ const tableColumns = [
 ];
 
 function Applicants() {
+  const dispatch = useDispatch();
+
   const [applicantForm, setApplicantForm] = useState({
-    mode:null,
-    data:{}
+    mode: null,
+    data: {}
   })
+
+  const [deletePopup, setDeletePopup] = useState({
+    isOpen: false,
+    applicant: {},
+  })
+
   const applicantData = useSelector(state => state.applicants.data);
+
+  const deleteApplicant = async (applicantId) => {
+    const response = await dbService.deleteApplicant(applicantId);
+
+    if (response.success) {
+      console.log("applicant_deleted_successfully");
+      dispatch(removeApplicant(applicantId));
+    } else {
+      console.log(
+        "unable to delete data from database",
+        response.error
+      );
+    }
+  };
   return (
 
     <section className="space-y-6">
@@ -34,10 +59,10 @@ function Applicants() {
         <ApplicantForm
           mode={applicantForm.mode}
           data={applicantForm.data}
-          onClose={()=>{
+          onClose={() => {
             setApplicantForm({
-              mode:null,
-              data:{},
+              mode: null,
+              data: {},
             })
           }}
         />
@@ -62,8 +87,8 @@ function Applicants() {
           <button
             type="button"
             className="bg-emerald-600 text-white px-5 py-2 rounded-md font-medium cursor-pointer"
-            onClick={()=>{
-              setApplicantForm({mode:"add", data:{}})
+            onClick={() => {
+              setApplicantForm({ mode: "add", data: {} })
             }}
           >
             Add Applicant
@@ -135,10 +160,16 @@ function Applicants() {
             <ApplicantDataCard
               key={applicant.id}
               applicant={applicant}
-              onEdit={()=>{
+              onEdit={() => {
                 setApplicantForm({
-                  mode:"update",
-                  data:applicant,
+                  mode: "update",
+                  data: applicant,
+                })
+              }}
+              onRemove={() => {
+                setDeletePopup({
+                  isOpen: true,
+                  applicant,
                 })
               }}
             />
@@ -154,11 +185,17 @@ function Applicants() {
                 {applicantData.map((applicant) => (
                   <ApplicantDataRow
                     key={applicant.id}
-                    applicant={applicant} 
-                    onEdit={()=>{
+                    applicant={applicant}
+                    onEdit={() => {
                       setApplicantForm({
-                        mode:"update",
-                        data:applicant,
+                        mode: "update",
+                        data: applicant,
+                      })
+                    }}
+                    onRemove={() => {
+                      setDeletePopup({
+                        isOpen: true,
+                        applicant,
                       })
                     }}
                   />
@@ -175,6 +212,25 @@ function Applicants() {
           <p>Search and filtering will be added later.</p>
         </div>
       </div>
+      {
+        deletePopup.isOpen &&
+        <ConfirmationPopup
+          message="Are you sure you want to delete applicant ?"
+          onConfirm={() => {
+            deleteApplicant(deletePopup.applicant.id);
+             setDeletePopup({
+              isOpen: false,
+              applicant: {},
+            })
+          }}
+          onCancel={() => {
+            setDeletePopup({
+              isOpen: false,
+              applicant: null,
+            })
+          }}
+        />
+      }
     </section>
   );
 }

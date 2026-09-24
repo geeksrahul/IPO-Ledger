@@ -1,6 +1,6 @@
-import { Edit } from "lucide-react";
+import { Edit, Trash } from "lucide-react";
 
-const ApplicantDataRow = ({ applicant, onEdit }) => {
+const ApplicantDataRow = ({ applicant, onEdit, onRemove }) => {
     const {
         name,
         email,
@@ -38,7 +38,7 @@ const ApplicantDataRow = ({ applicant, onEdit }) => {
             </td>
 
             {/* Actions */}
-            <td className="px-6 py-5 text-right">
+            <td className="px-6 py-5">
                 <button
                     type="button"
                     onClick={onEdit}
@@ -46,6 +46,14 @@ const ApplicantDataRow = ({ applicant, onEdit }) => {
                     className="inline-flex rounded-lg p-2 text-slate-500 transition hover:bg-emerald-50 hover:text-emerald-600 dark:text-slate-400 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-400"
                 >
                     <Edit className="h-4 w-4" />
+                </button>
+                <button
+                    type="button"
+                    onClick={onRemove}
+                    aria-label={`Remove ${name}`}
+                    className="inline-flex rounded-lg p-2 text-slate-500 transition hover:bg-emerald-50 hover:text-emerald-600 dark:text-slate-400 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-400"
+                >
+                    <Trash className="h-4 w-4" />
                 </button>
             </td>
         </tr>
